@@ -29,7 +29,7 @@ export function getUserAccessTokenFromK6Res(res) {
  * @param {User} usrs 
  * @returns {Boolean}
  */
-function isUserValid(usrs) {
+export function isUserValid(usrs) {
     if (
         typeof usrs === 'object' &&
         typeof usrs.username === 'string' &&
@@ -42,19 +42,6 @@ function isUserValid(usrs) {
     return false;
 }
 
-/**
- * validate user object from k6 response
- * @param {import("k6/http").RefinedResponse} res
- * @returns {Boolean}
- */
-export function isUserValidFromK6Res(res) {
-    try {
-        const user = res.json().data;
-        return isUserValid(user);
-    } catch (error) {
-        return false;
-    }
-}
 
 
 
