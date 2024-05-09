@@ -1,5 +1,5 @@
 /* eslint-disable no-loss-of-precision */
-import { isValidUrl } from "../helpers/assertion";
+import { isValidUrl } from "../helpers/assertion.js";
 import { generateRandomBigInt, generateRandomDescription, generateRandomImageUrl, generateRandomName, generateRandomNumber } from "../helpers/generator";
 
 /**
