@@ -145,3 +145,7 @@ export function TestCustomerGet(user, config, tags) {
     return null
 
 }
+
+// TODO: create TestCustomerCheckout
+
+// TODO: create TestCustomerCheckoutHistory
