@@ -11,7 +11,7 @@ import { generateProduct, getRandomCategory } from "../types/product.js";
  * @param {import("../types/user.js").User} user 
  */
 export function TestCustomerProductGet(user, config, tags) {
-    const currentRoute = "/v1/product/customer"
+    const currentRoute = `${config.BASE_URL}/v1/product/customer`
     const currentFeature = "get product customer"
 
     /** @type {import("../helpers/request.js").RequestAssertResponse} */
@@ -51,7 +51,7 @@ export function TestCustomerProductGet(user, config, tags) {
             nameToAdd = nameToAdd + "b"
         }
 
-        const postFeatureRoute = "/v1/product"
+        const postFeatureRoute = `${config.BASE_URL}/v1/product`
         const postFeatureHeaders = {
             Authorization: `Bearer ${user.accessToken}`
         }

@@ -21,7 +21,7 @@ const productNegativePayload = (positivePayload) => generateTestObjects({
  * @returns {import("../types/product.js").Product}
  */
 export function TestProductManagementPost(user, config, tags) {
-    const currentRoute = "/v1/product"
+    const currentRoute = `${config.BASE_URL}/v1/product`
     const currentFeature = "post product"
 
     if (!isUserValid(user)) {
@@ -76,7 +76,7 @@ export function TestProductManagementPost(user, config, tags) {
  * @returns {import("../types/product.js").Product[]}
  */
 export function TestProductManagementGet(user, config, tags) {
-    const currentRoute = "/v1/product"
+    const currentRoute = `${config.BASE_URL}/v1/product`
     const currentFeature = "get product"
 
     if (!isUserValid(user)) {
@@ -234,7 +234,7 @@ export function TestProductManagementGet(user, config, tags) {
  * @returns {import("../types/product.js").Product}
  */
 export function TestProductManagementPut(user, config, tags) {
-    const currentRoute = "/v1/product"
+    const currentRoute = `${config.BASE_URL}/v1/product`
     const currentFeature = "put product"
 
     if (!isUserValid(user)) {
@@ -309,7 +309,7 @@ export function TestProductManagementPut(user, config, tags) {
  * @returns {import("../types/product.js").Product}
  */
 export function TestProductManagementDelete(user, config, tags) {
-    const currentRoute = "/v1/product"
+    const currentRoute = `${config.BASE_URL}/v1/product`
     const currentFeature = "delete product"
 
     if (!isUserValid(user)) {

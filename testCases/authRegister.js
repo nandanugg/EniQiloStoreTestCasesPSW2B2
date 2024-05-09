@@ -15,7 +15,7 @@ const registerNegativePayloads = (positivePayload) => generateTestObjects({
  * @returns {import("../types/user.js").User | null}
  */
 export function TestRegister(config, tags) {
-    const currentRoute = "/v1/staff/register"
+    const currentRoute = `${config.BASE_URL}/v1/staff/register`
     const currentFeature = "Register"
     /** @type {import("../types/user.js").User} */
     const registerPositivePayload = {

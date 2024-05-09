@@ -55,7 +55,6 @@ export function testGetAssert(featureName, currentTestName, route, params, heade
 export function testPostJson(route, body, headersObj, tags = {}, options = [],) {
     const headers = options.includes("noContentType") ? Object.assign({}, headersObj) : Object.assign({ "Content-Type": "application/json" }, headersObj)
     const parsedBody = options.includes("plainBody") ? body : JSON.stringify(body);
-
     return http.post(route, parsedBody, { headers, tags });
 }
 
