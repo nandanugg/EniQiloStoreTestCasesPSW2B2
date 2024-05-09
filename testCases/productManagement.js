@@ -272,7 +272,7 @@ export function TestProductManagementPut(user, config, tags) {
         testPutJsonAssert(currentFeature, "invalid id", `${currentRoute}/asd`, {}, headers, {
             ['should return 404']: (res) => res.status === 404,
         }, config, tags);
-        productNegativePayload(productNegativePayload).forEach((payload) => {
+        productNegativePayload(productPositivePayload).forEach((payload) => {
             testPutJsonAssert(currentFeature, "invalid payload", `${currentRoute}/${productToEdit.id}`, payload, headers, {
                 ['should return 400']: (res) => res.status === 400,
             }, config, tags);
