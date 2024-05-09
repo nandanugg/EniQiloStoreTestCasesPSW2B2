@@ -1,10 +1,8 @@
 /* eslint-disable no-undef */
 import config from './config.js';
-import { generateRandomNumber } from './helpers/generator.js';
 import { TestLogin } from './testCases/authLogin.js';
 import { TestRegister } from './testCases/authRegister.js';
 import { TestProductManagementDelete, TestProductManagementGet, TestProductManagementPost, TestProductManagementPut } from './testCases/productManagement.js';
-import { generateInternationalCallingCode } from './types/user.js';
 
 export const options = {
     stages: [],
