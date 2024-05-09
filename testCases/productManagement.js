@@ -46,7 +46,7 @@ export function TestProductManagementPost(user, config, tags) {
             ['should return 401']: (res) => res.status === 401,
         },
             config, tags);
-        productNegativePayload(productNegativePayload).forEach((payload) => {
+        productNegativePayload(productPositivePayload).forEach((payload) => {
             testPostJsonAssert(currentFeature, "invalid payload", currentRoute, payload, headers, {
                 ['should return 400']: (res) => res.status === 400,
             }, config, tags);
