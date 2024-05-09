@@ -22,10 +22,6 @@ function getUserAccessTokenFromK6Res(res) {
     }
 }
 
-export function generateInternationalCallingCode() {
-    return callingCodes[Math.floor(Math.random() * callingCodes.length)]
-}
-
 /**
  * validate user object
  * @param {User} usrs 
@@ -56,12 +52,6 @@ function isUserValidFromK6Res(res) {
     } catch (error) {
         return false;
     }
-}
-
-module.exports = {
-    getUserAccessTokenFromK6Res,
-    isUserValid,
-    isUserValidFromK6Res
 }
 
 const callingCodes = ["93",
@@ -307,3 +297,15 @@ const callingCodes = ["93",
     "967",
     "260",
     "263"]
+
+export function generateInternationalCallingCode() {
+    return callingCodes[Math.floor(Math.random() * callingCodes.length)]
+}
+
+
+module.exports = {
+    getUserAccessTokenFromK6Res,
+    isUserValid,
+    isUserValidFromK6Res
+}
+
