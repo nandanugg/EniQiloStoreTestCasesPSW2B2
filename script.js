@@ -1,8 +1,10 @@
 /* eslint-disable no-undef */
 import config from './config.js';
+import { generateRandomNumber } from './helpers/generator.js';
 import { TestLogin } from './testCases/authLogin.js';
 import { TestRegister } from './testCases/authRegister.js';
 import { TestProductManagementDelete, TestProductManagementGet, TestProductManagementPost, TestProductManagementPut } from './testCases/productManagement.js';
+import { generateInternationalCallingCode } from './types/user.js';
 
 export const options = {
     stages: [],
@@ -47,12 +49,15 @@ export default function () {
     // const percentageVUs80 = (__VU - 1) % Math.ceil(totalVUs / Math.round(totalVUs * 0.8)) === 0; // Calculate 80% of total VUs
     // const percentageVUs90 = (__VU - 1) % Math.ceil(totalVUs / Math.round(totalVUs * 0.9)) === 0; // Calculate 90% of total VUs
 
-    let user = TestRegister(config, tags)
-    if (user) {
-        user = TestLogin(user, config, tags)
-        TestProductManagementPost(user, config, tags)
-        TestProductManagementGet(user, config, tags)
-        TestProductManagementPut(user, config, tags)
-        TestProductManagementDelete(user, config, tags)
-    }
+
+    console.log(generateInternationalCallingCode())
+
+    // let user = TestRegister(config, tags)
+    // if (user) {
+    //     user = TestLogin(user, config, tags)
+    //     TestProductManagementPost(user, config, tags)
+    //     TestProductManagementGet(user, config, tags)
+    //     TestProductManagementPut(user, config, tags)
+    //     TestProductManagementDelete(user, config, tags)
+    // }
 }
