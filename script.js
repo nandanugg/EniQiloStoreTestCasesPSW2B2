@@ -47,7 +47,6 @@ export default function () {
     // const percentageVUs80 = (__VU - 1) % Math.ceil(totalVUs / Math.round(totalVUs * 0.8)) === 0; // Calculate 80% of total VUs
     // const percentageVUs90 = (__VU - 1) % Math.ceil(totalVUs / Math.round(totalVUs * 0.9)) === 0; // Calculate 90% of total VUs
 
-
     let user = TestRegister(config, tags)
     if (user) {
         user = TestLogin(user, config, tags)

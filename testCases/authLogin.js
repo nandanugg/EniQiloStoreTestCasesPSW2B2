@@ -37,7 +37,7 @@ export function TestLogin(user, config, tags) {
     let res;
 
     if (!config.POSITIVE_CASE) {
-        registerNegativePayloads(registerNegativePayloads).forEach((payload) => {
+        registerNegativePayloads(registerPositivePayload).forEach((payload) => {
             testPostJsonAssert(currentFeature, "invalid payload", currentRoute, payload, {}, {
                 ['should return 400']: (res) => res.status === 400,
             }, config, tags);
