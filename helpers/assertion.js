@@ -46,7 +46,7 @@ export function isExists(v, query) {
     try {
         const obj = v.json()
         const res = traverseObject(obj, query)
-        return res.includes(undefined)
+        return !res.includes(undefined)
     } catch (e) {
         return false
     }
