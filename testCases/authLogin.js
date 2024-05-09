@@ -1,7 +1,7 @@
 import { fail } from "k6";
 import { generateTestObjects } from "../helpers/generator.js";
 import { testPostJsonAssert } from "../helpers/request.js";
-import { getUserAccessTokenFromK6Res, isUserValid } from "../types/user.js";
+import { isUserValid } from "../types/user.js";
 import { isExists } from "../helpers/assertion.js";
 
 const registerNegativePayloads = (positivePayload) => generateTestObjects({
