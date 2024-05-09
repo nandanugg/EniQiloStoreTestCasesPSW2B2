@@ -36,7 +36,7 @@ export function TestRegister(config, tags) {
     }
 
     res = testPostJsonAssert(currentFeature, "register with correct payload", currentRoute, registerPositivePayload, {}, {
-        ['should return 200']: (res) => res.status === 200,
+        ['should return 201']: (res) => res.status === 201,
         ['should return have a userId']: (res) => isExists(res, "data.userId"),
         ['should return have a phoneNumber']: (res) => isExists(res, "data.phoneNumber"),
         ['should return have a name']: (res) => isExists(res, "data.name"),
