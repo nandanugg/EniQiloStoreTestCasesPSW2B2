@@ -53,7 +53,7 @@ export function TestLogin(user, config, tags) {
     }, config, tags);
 
     if (res.isSuccess) {
-        return Object.assign(registerPositivePayload, { accessToken: getUserAccessTokenFromK6Res(res) })
+        return Object.assign(registerPositivePayload, { accessToken: res.res.json().data.accessToken })
     }
     return null
 
