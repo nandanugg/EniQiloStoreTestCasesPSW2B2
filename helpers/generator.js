@@ -1,4 +1,4 @@
-
+export const MaxInt = 9007199254740991; // Maximum safe integer in JavaScript
 export function generateRandomImageUrl() {
     return `http://${generateRandomDomain()}/image.png`
 }
@@ -99,19 +99,6 @@ export function generateRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min).toString();
 }
 
-/**
- * Generates a random bigint number between the specified minimum and maximum values.
- * @param {bigint} min - The minimum value for the random number.
- * @param {bigint} max - The maximum value for the random number.
- * @returns {string} - The generated random bigint number.
- */
-export function generateRandomBigInt(min, max) {
-    const bigMin = BigInt(min);
-    const bigMax = BigInt(max);
-    const range = bigMax - bigMin + BigInt(1); // Adding 1 to include the upper bound
-    const randomNumber = bigMin + BigInt(Math.floor(Number(range) * Math.random()));
-    return randomNumber.toString();
-}
 /**
  * generate param from object
  * @param {Object} params 

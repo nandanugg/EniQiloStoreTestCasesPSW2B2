@@ -1,6 +1,6 @@
 /* eslint-disable no-loss-of-precision */
 import { isEqualWith, isExists, isOrdered, isTotalDataInRange, isValidDate, isValidUrl } from "../helpers/assertion.js";
-import { generateRandomBigInt, generateRandomName } from "../helpers/generator.js";
+import { MaxInt, generateRandomNumber, generateRandomName } from "../helpers/generator.js";
 import { testGetAssert, testPostJsonAssert } from "../helpers/request.js";
 import { generateProduct, getRandomCategory } from "../types/product.js";
 
@@ -44,7 +44,7 @@ export function TestCustomerProductGet(user, config, tags) {
 
     if (!config.POSITIVE_CASE) {
         const categoryToSearch = getRandomCategory()
-        const skuToSearch = generateRandomBigInt(10000000000, 999999999999999999999999999999)
+        const skuToSearch = generateRandomNumber(10000000000, MaxInt)
 
         let nameToAdd = generateRandomName()
         if (!nameToAdd.includes("b")) {

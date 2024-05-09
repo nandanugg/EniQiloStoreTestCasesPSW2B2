@@ -1,6 +1,6 @@
 /* eslint-disable no-loss-of-precision */
 import { fail } from "k6";
-import { generateRandomBigInt, generateRandomName, generateRandomNumber, generateTestObjects } from "../helpers/generator.js";
+import { MaxInt, generateRandomNumber, generateRandomName, generateTestObjects } from "../helpers/generator.js";
 import { testDeleteAssert, testGetAssert, testPostJsonAssert, testPutJsonAssert } from "../helpers/request.js";
 import { isUserValid } from "../types/user.js";
 import { generateProduct, getRandomCategory } from "../types/product.js";
@@ -122,7 +122,7 @@ export function TestProductManagementGet(user, config, tags) {
 
     if (!config.POSITIVE_CASE) {
         const categoryToSearch = getRandomCategory()
-        const skuToSearch = generateRandomBigInt(10000000000, 999999999999999999999999999999)
+        const skuToSearch = generateRandomNumber(10000000000, MaxInt)
 
         let nameToAdd = generateRandomName()
         if (!nameToAdd.includes("a")) {
