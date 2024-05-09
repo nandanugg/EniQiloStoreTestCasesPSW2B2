@@ -1,6 +1,6 @@
 /**
  * @typedef {Object} User
- * @property {string} name - The username of the user.
+ * @property {string} name - The name of the user.
  * @property {string} phoneNumber - The phoneNumber of the user.
  * @property {string} password - The password of the user.
  * @property {string} accessToken - The accessToken of the user.
