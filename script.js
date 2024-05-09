@@ -50,14 +50,12 @@ export default function () {
     // const percentageVUs90 = (__VU - 1) % Math.ceil(totalVUs / Math.round(totalVUs * 0.9)) === 0; // Calculate 90% of total VUs
 
 
-    console.log(generateInternationalCallingCode())
-
-    // let user = TestRegister(config, tags)
-    // if (user) {
-    //     user = TestLogin(user, config, tags)
-    //     TestProductManagementPost(user, config, tags)
-    //     TestProductManagementGet(user, config, tags)
-    //     TestProductManagementPut(user, config, tags)
-    //     TestProductManagementDelete(user, config, tags)
-    // }
+    let user = TestRegister(config, tags)
+    if (user) {
+        user = TestLogin(user, config, tags)
+        TestProductManagementPost(user, config, tags)
+        TestProductManagementGet(user, config, tags)
+        TestProductManagementPut(user, config, tags)
+        TestProductManagementDelete(user, config, tags)
+    }
 }
