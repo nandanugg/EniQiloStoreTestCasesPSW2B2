@@ -13,7 +13,7 @@
  * @type {Config}
  */
 const config = {
-    BASE_URL: __ENV.BASE_URL,
+    BASE_URL: __ENV.BASE_URL ? __ENV.BASE_URL : "http://localhost:8080",
     DEBUG_ALL: __ENV.DEBUG_ALL ? true : false,
     POSITIVE_CASE: __ENV.ONLY_POSITIVE ? true : false,
     LOAD_TEST: __ENV.LOAD_TEST ? true : false
