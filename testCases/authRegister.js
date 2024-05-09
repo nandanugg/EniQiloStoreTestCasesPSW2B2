@@ -1,7 +1,7 @@
 import { isExists } from "../helpers/assertion.js";
 import { generateRandomName, generateRandomNumber, generateRandomPassword, generateTestObjects } from "../helpers/generator.js";
 import { testPostJsonAssert } from "../helpers/request.js";
-import { generateInternationalCallingCode, getUserAccessTokenFromK6Res } from "../types/user.js";
+import { generateInternationalCallingCode } from "../types/user.js";
 
 const registerNegativePayloads = (positivePayload) => generateTestObjects({
     phoneNumber: { type: "string", notNull: true, minLength: 10, maxLength: 16 },

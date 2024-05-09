@@ -1,28 +1,12 @@
 /**
  * @typedef {Object} User
- * @property {string} username - The username of the user.
+ * @property {string} name - The username of the user.
  * @property {string} phoneNumber - The phoneNumber of the user.
  * @property {string} password - The password of the user.
  * @property {string} accessToken - The accessToken of the user.
  */
 
 import { generateRandomNumber } from "../helpers/generator.js";
-
-/**
- * get user access token from k6 response
- * @param {import("k6/http").RefinedResponse} res
- * @returns {string | null}
- */
-export function getUserAccessTokenFromK6Res(res) {
-    try {
-        if (!res.json().data || !res.json().data.accessToken) {
-            return null
-        }
-        return res.json().data.accessToken
-    } catch (error) {
-        return null
-    }
-}
 
 /**
  * validate user object
@@ -32,7 +16,7 @@ export function getUserAccessTokenFromK6Res(res) {
 export function isUserValid(usrs) {
     if (
         typeof usrs === 'object' &&
-        typeof usrs.username === 'string' &&
+        typeof usrs.name === 'string' &&
         typeof usrs.phoneNumber === 'string' &&
         typeof usrs.password === 'string' &&
         typeof usrs.accessToken === 'string'
