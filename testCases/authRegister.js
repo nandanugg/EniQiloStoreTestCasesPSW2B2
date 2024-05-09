@@ -20,7 +20,7 @@ export function TestRegister(config, tags) {
     /** @type {import("../types/user.js").User} */
     const registerPositivePayload = {
         name: generateRandomName(),
-        phoneNumber: `+${generateInternationalCallingCode()}${generateRandomNumber(1000000, 9999999999999)}`,
+        phoneNumber: `+${generateInternationalCallingCode()}${generateRandomNumber(1000000, 999999999)}`,
         password: generateRandomPassword()
     }
 
