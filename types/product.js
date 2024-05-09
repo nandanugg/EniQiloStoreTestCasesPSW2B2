@@ -1,6 +1,6 @@
 /* eslint-disable no-loss-of-precision */
 import { isValidUrl } from "../helpers/assertion.js";
-import { generateRandomBigInt, generateRandomDescription, generateRandomImageUrl, generateRandomName, generateRandomNumber } from "../helpers/generator";
+import { generateRandomBigInt, generateRandomDescription, generateRandomImageUrl, generateRandomName, generateRandomNumber } from "../helpers/generator.js";
 
 /**
  * Represents a product.
