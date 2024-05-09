@@ -44,8 +44,7 @@ export function TestProductManagementPost(user, config, tags) {
         }, config, tags);
         testPostJsonAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
             ['should return 401']: (res) => res.status === 401,
-        },
-            config, tags);
+        }, config, tags);
         productNegativePayload(productPositivePayload).forEach((payload) => {
             testPostJsonAssert(currentFeature, "invalid payload", currentRoute, payload, headers, {
                 ['should return 400']: (res) => res.status === 400,

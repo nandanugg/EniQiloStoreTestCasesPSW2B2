@@ -37,6 +37,11 @@ export function generateInternationalCallingCode() {
     return callingCodes[generateRandomNumber(0, callingCodes.length - 1)];
 }
 
-
+/**
+ * @typedef {Object} UserCustomer
+ * @property {string} id - The name of the user.
+ * @property {string} name - The name of the user.
+ * @property {string} phoneNumber - The phoneNumber of the user.
+ */
 
 
