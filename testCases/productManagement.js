@@ -255,6 +255,9 @@ export function TestProductManagementPut(user, config, tags) {
         ['should return 200']: (res) => res.status === 200,
     }, config, tags);
 
+    if (!res.isSuccess) {
+        fail("get product to edit failed", res)
+    }
     /** @type {import("../types/product.js").Product[]} */
     const products = res.res.json().data
     const productToEdit = products[generateRandomNumber(0, products.length - 1)]
@@ -266,11 +269,11 @@ export function TestProductManagementPut(user, config, tags) {
         testPutJsonAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
-        testPutJsonAssert(currentFeature, "invalid id", `${currentFeature}/asd`, {}, headers, {
+        testPutJsonAssert(currentFeature, "invalid id", `${currentRoute}/asd`, {}, headers, {
             ['should return 404']: (res) => res.status === 404,
         }, config, tags);
         productNegativePayload(productNegativePayload).forEach((payload) => {
-            testPutJsonAssert(currentFeature, "invalid payload", `${currentFeature}/${productToEdit.id}`, payload, headers, {
+            testPutJsonAssert(currentFeature, "invalid payload", `${currentRoute}/${productToEdit.id}`, payload, headers, {
                 ['should return 400']: (res) => res.status === 400,
             }, config, tags);
         });
@@ -338,7 +341,7 @@ export function TestProductManagementDelete(user, config, tags) {
         testDeleteAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
-        testDeleteAssert(currentFeature, "invalid id", `${currentFeature}/asd`, {}, headers, {
+        testDeleteAssert(currentFeature, "invalid id", `${currentRoute}/asd`, {}, headers, {
             ['should return 404']: (res) => res.status === 404,
         }, config, tags);
     }
