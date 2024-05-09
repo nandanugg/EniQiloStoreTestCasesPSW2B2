@@ -17,7 +17,7 @@ const registerNegativePayloads = (positivePayload) => generateTestObjects({
  * @returns {import("../types/user.js").User | null}
  */
 export function TestLogin(user, config, tags) {
-    const currentRoute = "/v1/auth/login"
+    const currentRoute = "/v1/staff/login"
     const currentFeature = "login"
 
     if (!isUserValid(user)) {
