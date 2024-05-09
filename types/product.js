@@ -1,3 +1,4 @@
+/* eslint-disable no-loss-of-precision */
 import { isValidUrl } from "../helpers/assertion";
 import { generateRandomBigInt, generateRandomDescription, generateRandomImageUrl, generateRandomName, generateRandomNumber } from "../helpers/generator";
 
@@ -30,7 +31,7 @@ export function getRandomCategory() {
 export function generateProduct() {
     return {
         name: generateRandomName(),
-        sku: `${generateRandomBigInt(10000000000, 999999999999999999999999999999n)}`,
+        sku: `${generateRandomBigInt(10000000000, 999999999999999999999999999999)}`,
         category: getRandomCategory(),
         imageUrl: generateRandomImageUrl(),
         notes: generateRandomDescription(200),
