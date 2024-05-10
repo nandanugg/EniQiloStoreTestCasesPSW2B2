@@ -113,7 +113,7 @@ export function TestCustomerGet(user, config, tags) {
     if (!config.POSITIVE_CASE) {
         const phoneNumberToAdd = `+${generateInternationalCallingCode()}${generateRandomNumber(1000000, 999999999)}`
         let phoneNumberToSearch = phoneNumberToAdd.substring(0, phoneNumberToAdd.length - 3)
-        phoneNumberToSearch = phoneNumberToAdd.substring(1)
+        phoneNumberToSearch = phoneNumberToSearch.substring(1)
         let nameToSearch = generateRandomName()
         if (!nameToSearch.includes("c")) {
             nameToSearch = nameToSearch + "c"
