@@ -81,7 +81,7 @@ export function TestCustomerGetProduct(user, config, tags) {
             price: 'asc'
         }, headers, {
             ['should return 200']: (res) => res.status === 200,
-            ['should have the sku that is searced']: (res) => isEqualWith(res, 'data[].sku', (v) => v.every(a => a === skuToSearch)),
+            ['should have the sku that is searced']: (res) => isOrdered(res, 'data[].price', 'asc', (v) => v),
         }, config, tags);
         const paginationRes = testGetAssert(currentFeature, 'get product filtered by pagination', currentRoute, {
             limit: 2,
