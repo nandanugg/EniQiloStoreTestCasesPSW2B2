@@ -147,7 +147,7 @@ export function TestCustomerGet(user, config, tags) {
             phoneNumber: phoneNumberToSearch
         }, headers, {
             ['should return 200']: (res) => res.status === 200,
-            ['should have a phone number that is searched']: (res) => isEqualWith(res, 'data[].name', (v) => v.every(a => a.includes(`+${phoneNumberToSearch}`))),
+            ['should have a phone number that is searched']: (res) => isEqualWith(res, 'data[].phoneNumber', (v) => v.every(a => a.includes(`+${phoneNumberToSearch}`))),
         }, config, tags);
     }
 
