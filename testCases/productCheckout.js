@@ -431,11 +431,11 @@ export function TestCustomerCheckoutHistory(user, productCheckoutToCheck, config
                 ['should return 200']: (res) => res.status === 200,
             }, config, tags);
             if (searchProductBought.isSuccess) {
-                if (searchProductBought.res.json().data.some(a => a.productDetails.some(b =>
+                if (searchProductBought.res.json().data.some(b =>
                     b.customerId === productCheckoutToCheck.customerId &&
                     b.paid === productCheckoutToCheck.paid &&
                     b.change === productCheckoutToCheck.change
-                ))) {
+                )) {
                     break;
                 }
             }
