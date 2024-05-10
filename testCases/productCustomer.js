@@ -59,7 +59,7 @@ export function TestCustomerGetProduct(user, config, tags) {
             ['should return 201']: (res) => res.status === 201,
         }, config, tags)
 
-        testGetAssert(currentFeature, 'get product with an "a" in the name', currentRoute, {
+        testGetAssert(currentFeature, 'get product with an "b" in the name', currentRoute, {
             name: "b"
         }, headers, {
             ['should return 200']: (res) => res.status === 200,
