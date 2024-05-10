@@ -6,14 +6,13 @@ import { isExists } from "../helpers/assertion.js";
 
 const registerNegativePayloads = (positivePayload) => generateTestObjects({
     phoneNumber: { type: "string", notNull: true, minLength: 10, maxLength: 16 },
-    name: { type: "string", notNull: true, minLength: 5, maxLength: 50 },
     password: { type: "string", minLength: 5, maxLength: 15, notNull: true }
 }, positivePayload)
 /**
  * 
  * @param {import("../config.js").Config} config 
  * @param {Object} tags 
- * @param {import("../types/user.js").User} user
+ * @param {import("../types/user.js").User} use
  * @returns {import("../types/user.js").User | null}
  */
 export function TestLogin(user, config, tags) {
@@ -29,7 +28,6 @@ export function TestLogin(user, config, tags) {
 
     /** @type {import("../types/user.js").User} */
     const registerPositivePayload = {
-        name: user.name,
         phoneNumber: user.phoneNumber,
         password: user.password
     }
