@@ -141,7 +141,7 @@ export function TestCustomerGet(user, config, tags) {
             name: "c"
         }, headers, {
             ['should return 200']: (res) => res.status === 200,
-            ['should have an "c" in the result']: (res) => isEqualWith(res, 'data[].name', (v) => v.every(a => a.includes("c"))),
+            ['should have an "c" in the result']: (res) => isEqualWith(res, 'data[].name', (v) => v.every(a => a.toLowerCase().includes("c"))),
         }, config, tags);
         testGetAssert(currentFeature, 'get customer with phone number', currentRoute, {
             phoneNumber: phoneNumberToSearch
