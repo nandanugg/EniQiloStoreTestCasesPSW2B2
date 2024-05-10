@@ -172,9 +172,25 @@ const customerCheckoutNegativePayloads = (positivePayload) => generateTestObject
     change: { type: "number", notNull: true, min: 0 },
 }, positivePayload)
 /** 
- * @typedef {Object} ProductCheckout
- * @property {string} customerId - The id of the customer
+ * @typedef {Object} ProductDetailsCheckout
+ * @property {string} productId - The id of the customer
  * @property {number} quantity - The quantity of the product
+ */
+
+/**
+ * @typedef {Object} ProductCheckout
+ * @property {number} paid - The amount of money paid
+ * @property {number} change - The amount of money change
+ * @property {string} customerId - The id of the customer
+ * @property {ProductDetailsCheckout[]} productDetails - The details of the product
+ */
+
+/**
+ * 
+ * @param {import("../types/user.js").User} user 
+ * @param {import("../config.js").Config} config 
+ * @param {Object} tags 
+ * @returns {ProductCheckout[]}
  */
 export function TestCustomerCheckout(user, config, tags) {
     const currentRoute = `${config.BASE_URL}/v1/product/checkout`
@@ -211,9 +227,9 @@ export function TestCustomerCheckout(user, config, tags) {
         productsIndexToBuy.push(generateRandomNumber(0, products.length - 1))
     }
     productsIndexToBuy = [...new Set(productsIndexToBuy)]
-    /** @type {ProductCheckout[]} */
+    /** @type {ProductDetailsCheckout[]} */
     const productsToBuy = []
-    /** @type {ProductCheckout[]} */
+    /** @type {ProductDetailsCheckout[]} */
     const productsToBuyButQuantityIsNotEnough = []
     let totalPrice = 0
     productsIndexToBuy.forEach(i => {
@@ -230,6 +246,7 @@ export function TestCustomerCheckout(user, config, tags) {
         })
     });
 
+    /** @type {ProductCheckout} */
     const customerCheckoutPositivePayload = {
         customerId: customerToPay.userId,
         productDetails: productsToBuy,
@@ -292,7 +309,7 @@ export function TestCustomerCheckout(user, config, tags) {
             fail(`${currentFeature}  Failed to add product with isAvailable == false`)
         }
         const productIdIsAvailableFalse = res.res.json().data.id
-        /** @type {ProductCheckout[]} */
+        /** @type {ProductDetailsCheckout[]} */
         const productToBuyButOneItemIsAvailableFalse = [...productsToBuy, {
             productId: productIdIsAvailableFalse,
             quantity: productIsAvailabeFalseToAdd.stock - 1
@@ -317,18 +334,18 @@ export function TestCustomerCheckout(user, config, tags) {
         });
     }
 
-    return null
+    return customerCheckoutPositivePayload
 }
 
 /**
  * 
  * @param {import("../types/user.js").User} user 
- * @param {import("../types/user.js").UserCustomer} customerToCheck 
+ * @param {ProductCheckout} productCheckoutToCheck 
  * @param {import("../config.js").Config} config 
  * @param {Object} tags 
  * @returns 
  */
-export function TestCustomerCheckoutHistory(user, customerToCheck, config, tags) {
+export function TestCustomerCheckoutHistory(user, productCheckoutToCheck, config, tags) {
     const currentRoute = `${config.BASE_URL}/v1/product/checkout/history`
     const currentFeature = "get customer product checkout history"
 
@@ -341,8 +358,6 @@ export function TestCustomerCheckoutHistory(user, customerToCheck, config, tags)
     }
 
     /** @type {import("../helpers/request.js").RequestAssertResponse} */
-    let res;
-
     if (!config.POSITIVE_CASE) {
         testGetAssert(currentFeature, "empty headers", currentRoute, {}, {}, {
             ['should return 401']: (res) => res.status === 401,
@@ -370,6 +385,13 @@ export function TestCustomerCheckoutHistory(user, customerToCheck, config, tags)
     }, config, tags);
 
     if (!config.POSITIVE_CASE) {
+        testGetAssert(currentFeature, 'get customer checkout history get createdAt oldest first', currentRoute, {
+            createdAt: 'asc'
+        }, headers, {
+            ['should return 200']: (res) => res.status === 200,
+            ['should have return ordered by oldest first']: (res) => isOrdered(res, 'data[].createdAt', 'asc', (v) => new Date(v)),
+        }, config, tags);
+
         const paginationRes = testGetAssert(currentFeature, 'get customer checkout history filtered by pagination', currentRoute, {
             limit: 2,
             offset: 0
@@ -396,6 +418,25 @@ export function TestCustomerCheckoutHistory(user, customerToCheck, config, tags)
                 },
             }, config, tags);
         }
+        for (let index = 0; index < 990; index + 10) {
+            const searchProductBought = testGetAssert(currentFeature, "get customer checkout history based on the product bought", currentRoute, {
+                limit: 10,
+                offset: 0,
+            }, headers, {
+                ['should return 200']: (res) => res.status === 200,
+            }, config, tags);
+            if (searchProductBought.isSuccess) {
+                if (searchProductBought.res.json().data.some(a => a.productDetails.some(b =>
+                    b.customerId === productCheckoutToCheck.customerId &&
+                    b.paid === productCheckoutToCheck.paid &&
+                    b.change === productCheckoutToCheck.change
+                ))) {
+                    break;
+                }
+            }
+        }
     }
+
+
     return null
 }
