@@ -299,6 +299,7 @@ export function TestProductManagementPut(user, config, tags) {
                         return false
                     }
                 })
+                return true
             } catch (error) {
                 return false
             }
