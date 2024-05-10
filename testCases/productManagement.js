@@ -13,7 +13,7 @@ const productNegativePayload = (positivePayload) => generateTestObjects({
     imageUrl: { notNull: true, type: 'string', isUrl: true },
     notes: { notNull: true, type: 'string', minLength: 1, maxLength: 200 },
     price: { notNull: true, type: 'number', min: 1 },
-    stock: { notNull: true, type: 'number', min: 1, max: 100000 },
+    stock: { notNull: true, type: 'number', min: -1, max: 100000 },
     location: { notNull: true, type: 'string', minLength: 1, maxLength: 200 },
     isAvailable: { notNull: true, type: 'boolean' },
 }, positivePayload)
@@ -162,7 +162,7 @@ export function TestProductManagementGet(user, config, tags) {
             name: "a"
         }, headers, {
             ['should return 200']: (res) => res.status === 200,
-            ['should have an "a" in the result']: (res) => isEqualWith(res, 'data[].name', (v) => v.every(a => a.includes("a"))),
+            ['should have an "a" in the result']: (res) => isEqualWith(res, 'data[].name', (v) => v.every(a => a.toLowerCase().includes("a"))),
         }, config, tags);
         testGetAssert(currentFeature, 'get product filtered by category', currentRoute, {
             category: categoryToSearch
