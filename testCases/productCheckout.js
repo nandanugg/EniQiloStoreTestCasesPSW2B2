@@ -420,10 +420,10 @@ export function TestCustomerCheckoutHistory(user, productCheckoutToCheck, config
                 },
             }, config, tags);
         }
-        for (let index = 0; index < 990; index + 10) {
+        for (let index = 0; index < 990; index += 10) {
             const searchProductBought = testGetAssert(currentFeature, "get customer checkout history based on the product bought", currentRoute, {
                 limit: 10,
-                offset: 0,
+                offset: index,
             }, headers, {
                 ['should return 200']: (res) => res.status === 200,
             }, config, tags);
