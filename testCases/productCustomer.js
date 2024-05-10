@@ -63,7 +63,7 @@ export function TestCustomerGetProduct(user, config, tags) {
             name: "b"
         }, headers, {
             ['should return 200']: (res) => res.status === 200,
-            ['should have an "b" in the result']: (res) => isEqualWith(res, 'data[].name', (v) => v.every(a => a.includes("b"))),
+            ['should have an "b" in the result']: (res) => isEqualWith(res, 'data[].name', (v) => v.every(a => a.toLowerCase().includes("b"))),
         }, config, tags);
         testGetAssert(currentFeature, 'get product filtered by category', currentRoute, {
             category: categoryToSearch
