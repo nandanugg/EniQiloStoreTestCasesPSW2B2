@@ -72,7 +72,7 @@ export function TestCustomerGetProduct(user, config, tags) {
             ['should have the category that is searced']: (res) => isEqualWith(res, 'data[].category', (v) => v.every(a => a === categoryToSearch)),
         }, config, tags);
         testGetAssert(currentFeature, 'get product filtered by sku', currentRoute, {
-            category: categoryToSearch
+            sku: skuToSearch
         }, headers, {
             ['should return 200']: (res) => res.status === 200,
             ['should have the sku that is searced']: (res) => isEqualWith(res, 'data[].sku', (v) => v.every(a => a === skuToSearch)),
