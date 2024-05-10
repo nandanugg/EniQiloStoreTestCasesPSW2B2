@@ -217,7 +217,7 @@ export function TestCustomerCheckout(user, config, tags) {
     const customers = res.res.json().data
     const customerToPay = customers[generateRandomNumber(0, customers.length - 1)]
 
-    res = testGetAssert(currentFeature, "get product", `${config.BASE_URL}/v1/product`, {
+    res = testGetAssert(currentFeature, "get product", `${config.BASE_URL}/v1/product/customer`, {
         inStock: true
     }, headers, {
         ['should return 200']: (res) => res.status === 200,
