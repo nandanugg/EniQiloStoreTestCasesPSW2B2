@@ -111,6 +111,10 @@ export function generateParamFromObj(params) {
         .join('&');
 }
 
+export function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
 /**
  * Generates test objects based on a given schema and a valid template.
  * The function creates a list of violations, which are test cases that violate the rules defined in the schema.
@@ -126,10 +130,6 @@ export function generateParamFromObj(params) {
  */
 export function generateTestObjects(schema, validTemplate) {
     const violations = [];
-
-    function clone(obj) {
-        return JSON.parse(JSON.stringify(obj));
-    }
 
     function addViolation(path, violation) {
         const testCase = clone(validTemplate);

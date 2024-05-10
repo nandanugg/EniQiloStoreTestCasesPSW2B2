@@ -1,6 +1,6 @@
 import { fail } from "k6";
 import { isEqualWith, isExists, isOrdered, isTotalDataInRange, isValidDate } from "../helpers/assertion.js";
-import { generateRandomName, generateRandomNumber, generateTestObjects } from "../helpers/generator.js";
+import { clone, generateRandomName, generateRandomNumber, generateTestObjects } from "../helpers/generator.js";
 import { testGetAssert, testPostJsonAssert } from "../helpers/request.js";
 import { generateInternationalCallingCode, isUserValid } from "../types/user.js";
 import { generateProduct } from "../types/product.js";
@@ -271,38 +271,38 @@ export function TestCustomerCheckout(user, config, tags) {
                 ['should return 400']: (res) => res.status === 400,
             }, config, tags);
         });
-        testPostJsonAssert(currentFeature, "productId is not found", currentRoute, Object.assign({
+        testPostJsonAssert(currentFeature, "productId is not found", currentRoute, Object.assign(clone(customerCheckoutPositivePayload), {
             productDetails: [{
                 productId: "notfound",
                 quantity: 1
             }]
-        }, customerCheckoutPositivePayload), headers, {
+        }), headers, {
             ['should return 404']: (res) => res.status === 404,
         }, config, tags);
 
-        testPostJsonAssert(currentFeature, "paid is not enough", currentRoute, Object.assign({
+        testPostJsonAssert(currentFeature, "paid is not enough", currentRoute, Object.assign(clone(customerCheckoutPositivePayload), {
             paid: totalPrice - 1
-        }, customerCheckoutPositivePayload), headers, {
+        }), headers, {
             ['should return 400']: (res) => res.status === 400,
         }, config, tags);
 
-        testPostJsonAssert(currentFeature, "change is not right", currentRoute, Object.assign({
+        testPostJsonAssert(currentFeature, "change is not right", currentRoute, Object.assign(clone(customerCheckoutPositivePayload), {
             paid: totalPrice + 10,
             change: 0
-        }, customerCheckoutPositivePayload), headers, {
+        }), headers, {
             ['should return 400']: (res) => res.status === 400,
         }, config, tags);
 
-        testPostJsonAssert(currentFeature, "one of product ids is not enough", currentRoute, Object.assign({
+        testPostJsonAssert(currentFeature, "one of product ids is not enough", currentRoute, Object.assign(clone(customerCheckoutPositivePayload), {
             productDetails: productsToBuyButQuantityIsNotEnough
-        }, customerCheckoutPositivePayload), headers, {
+        }), headers, {
             ['should return 400']: (res) => res.status === 400,
         }, config, tags);
 
 
-        const productIsAvailabeFalseToAdd = Object.assign({
+        const productIsAvailabeFalseToAdd = Object.assign(generateProduct(), {
             isAvailable: false,
-        }, generateProduct())
+        })
         res = testPostJsonAssert(currentFeature, 'add product with searched category', `${config.BASE_URL}/v1/product`, productIsAvailabeFalseToAdd, headers, {
             ['should return 201']: (res) => res.status === 201,
         }, config, tags)
@@ -321,7 +321,7 @@ export function TestCustomerCheckout(user, config, tags) {
         }, config, tags);
     }
 
-    res = testPostJsonAssert(currentFeature, "checkout with correct payload", currentRoute, customerCheckoutPositivePayload, headers, {
+    res = testPostJsonAssert(currentFeature, "checkout with correct payload", currentRoute, clone(customerCheckoutPositivePayload), headers, {
         ['should return 200']: (res) => res.status === 200,
     }, config, tags);
 
