@@ -126,7 +126,7 @@ export function TestProductManagementGet(user, config, tags) {
 
     if (!config.POSITIVE_CASE) {
         const categoryToSearch = getRandomCategory()
-        const skuToSearch = generateRandomNumber(10000000000, MaxInt)
+        const skuToSearch = `${generateRandomNumber(10000000000, MaxInt)}`
 
         let nameToAdd = generateRandomName()
         if (!nameToAdd.includes("a")) {

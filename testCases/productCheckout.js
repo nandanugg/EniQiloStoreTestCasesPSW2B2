@@ -1,5 +1,5 @@
 import { fail } from "k6";
-import { isEqualWith, isExists } from "../helpers/assertion.js";
+import { isEqualWith, isExists, isOrdered, isTotalDataInRange, isValidDate } from "../helpers/assertion.js";
 import { generateRandomName, generateRandomNumber, generateTestObjects } from "../helpers/generator.js";
 import { testGetAssert, testPostJsonAssert } from "../helpers/request.js";
 import { generateInternationalCallingCode, isUserValid } from "../types/user.js";
@@ -320,7 +320,15 @@ export function TestCustomerCheckout(user, config, tags) {
     return null
 }
 
-export function TestCustomerCheckoutHistory(user, config, tags) {
+/**
+ * 
+ * @param {import("../types/user.js").User} user 
+ * @param {import("../types/user.js").UserCustomer} customerToCheck 
+ * @param {import("../config.js").Config} config 
+ * @param {Object} tags 
+ * @returns 
+ */
+export function TestCustomerCheckoutHistory(user, customerToCheck, config, tags) {
     const currentRoute = `${config.BASE_URL}/v1/product/checkout/history`
     const currentFeature = "get customer product checkout history"
 
@@ -332,123 +340,62 @@ export function TestCustomerCheckoutHistory(user, config, tags) {
         Authorization: `Bearer ${user.accessToken}`
     }
 
-    res = testGetAssert(currentFeature, "get customer", `${config.BASE_URL}/v1/customer`, {}, headers, {
-        ['should return 200']: (res) => res.status === 200,
-    }, config, tags);
-    if (!res.isSuccess) {
-        fail(`${currentFeature}  Failed to get customer`)
-    }
-    /** @type {import("../types/user.js").UserCustomer[]} */
-    const customers = res.res.json().data
-    const customerToPay = customers[generateRandomNumber(0, customers.length - 1)]
-
-    res = testGetAssert(currentFeature, "get product", `${config.BASE_URL}/v1/product`, {}, headers, {
-        ['should return 200']: (res) => res.status === 200,
-    }, config, tags);
-    if (!res.isSuccess) {
-        fail(`${currentFeature}  Failed to get product`)
-    }
-    /** @type {import("../types/product.js").Product[]} */
-    const products = res.res.json().data
-    let productsIndexToBuy = []
-    for (let i = 0; i < generateRandomNumber(1, 4); i++) {
-        productsIndexToBuy.push(generateRandomNumber(0, products.length - 1))
-    }
-    productsIndexToBuy = [...new Set(productsIndexToBuy)]
-
-    const productsToBuy = []
-    const productsToBuyButQuantityIsNotEnough = []
-    let totalPrice = 0
-    productsIndexToBuy.forEach(i => {
-        const product = products[i]
-        const quantity = generateRandomNumber(1, product.stock)
-        totalPrice += product.price * quantity
-        productsToBuy.push({
-            productId: product.id,
-            quantity
-        })
-        productsToBuyButQuantityIsNotEnough.push({
-            productId: product.id,
-            quantity: quantity + 100000
-        })
-    });
-
-    const checkoutPositivePayload = {
-        customerId: customerToPay.userId,
-        productDetails: productsToBuy,
-        paid: totalPrice,
-        change: 0
-    }
-
     /** @type {import("../helpers/request.js").RequestAssertResponse} */
     let res;
 
     if (!config.POSITIVE_CASE) {
-        testPostJsonAssert(currentFeature, "empty headers", currentRoute, {}, {}, {
+        testGetAssert(currentFeature, "empty headers", currentRoute, {}, {}, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
-        testPostJsonAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
+        testGetAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
-        customerCheckoutNegativePayloads(checkoutPositivePayload).forEach((payload) => {
-            testPostJsonAssert(currentFeature, "invalid payload", currentRoute, payload, headers, {
-                ['should return 400']: (res) => res.status === 400,
-            }, config, tags);
-        });
-        testPostJsonAssert(currentFeature, "productId is not found", currentRoute, Object.assign(checkoutPositivePayload, {
-            productDetails: [{
-                productId: "notfound",
-                quantity: 1
-            }]
-        }), headers, {
-            ['should return 404']: (res) => res.status === 404,
-        }, config, tags);
-
-        testPostJsonAssert(currentFeature, "paid is not enough", currentRoute, Object.assign(checkoutPositivePayload, {
-            paid: totalPrice - 1
-        }), headers, {
-            ['should return 400']: (res) => res.status === 400,
-        }, config, tags);
-
-        testPostJsonAssert(currentFeature, "change is not right", currentRoute, Object.assign(checkoutPositivePayload, {
-            paid: totalPrice + 10,
-            change: 0
-        }), headers, {
-            ['should return 400']: (res) => res.status === 400,
-        }, config, tags);
-
-        testPostJsonAssert(currentFeature, "one of product ids is not enough", currentRoute, Object.assign(checkoutPositivePayload, {
-            productDetails: productsToBuyButQuantityIsNotEnough
-        }), headers, {
-            ['should return 400']: (res) => res.status === 400,
-        }, config, tags);
 
 
-        const productIsAvailabeFalseToAdd = Object.assign(generateProduct(), {
-            isAvailable: false,
-        })
-        res = testPostJsonAssert(currentFeature, 'add product with searched category', `${config.BASE_URL}/v1/product`, productIsAvailabeFalseToAdd, headers, {
-            ['should return 201']: (res) => res.status === 201,
-        }, config, tags)
 
-        if (!res.isSuccess) {
-            fail(`${currentFeature}  Failed to add product with isAvailable == false`)
-        }
-        const productIdIsAvailableFalse = res.res.json().data.id
-        const productToBuyButOneItemIsAvailableFalse = [productsToBuy, {
-            productId: productIdIsAvailableFalse,
-            quantity: productIsAvailabeFalseToAdd.stock - 1
-        }]
-        testPostJsonAssert(currentFeature, "one of product isAvailable == false", currentRoute, productToBuyButOneItemIsAvailableFalse, headers, {
-            ['should return 400']: (res) => res.status === 400,
-        }, config, tags);
     }
 
-    res = testPostJsonAssert(currentFeature, "checkout with correct payload", currentRoute, checkoutPositivePayload, headers, {
+    testGetAssert(currentFeature, "get customer checkout history", currentRoute, {}, headers, {
         ['should return 200']: (res) => res.status === 200,
+        ['should have transactionId']: (res) => isExists(res, 'data[].transactionId'),
+        ['should have customerId']: (res) => isExists(res, 'data[].customerId'),
+        ['should have productDetails']: (res) => isExists(res, 'data[].productDetails'),
+        ['should have productDetails.productId']: (res) => isExists(res, 'data[].productDetails[].productId'),
+        ['should have productDetails.quantity']: (res) => isExists(res, 'data[].productDetails[].quantity'),
+        ['should have paid']: (res) => isExists(res, 'data[].paid'),
+        ['should have change']: (res) => isExists(res, 'data[].change'),
+        ['should have createdAt']: (res) => isEqualWith(res, 'data[].createdAt', (v) => v.every(a => isValidDate(a))),
+        ['should have return ordered by newest first']: (res) => isOrdered(res, 'data[].createdAt', 'desc', (v) => new Date(v)),
+        ['should have no more than 5 data as default']: (res) => isTotalDataInRange(res, 'data[]', 1, 5),
     }, config, tags);
 
+    if (!config.POSITIVE_CASE) {
+        const paginationRes = testGetAssert(currentFeature, 'get customer checkout history filtered by pagination', currentRoute, {
+            limit: 2,
+            offset: 0
+        }, headers, {
+            ['should return 200']: (res) => res.status === 200,
+            ['should have no more than 2 data as default']: (res) => isTotalDataInRange(res, 'data[]', 1, 2),
+        }, config, tags);
+
+        if (paginationRes.isSuccess) {
+            testGetAssert(currentFeature, 'get customer checkout history filtered by pagination and offset', currentRoute, {
+                limit: 2,
+                offset: 2
+            }, headers, {
+                ['should return 200']: (res) => res.status === 200,
+                ['should have no more than 2 data as default']: (res) => isTotalDataInRange(res, 'data[]', 1, 2),
+                ['should have a different data than offset 0']: (res) => {
+                    try {
+                        return res.json().data.every(e => {
+                            return paginationRes.res.json().data.every(a => a.id !== e.id)
+                        })
+                    } catch (error) {
+                        return false
+                    }
+                },
+            }, config, tags);
+        }
+    }
     return null
 }
-
-// TODO: create TestCustomerCheckoutHistory
