@@ -38,7 +38,7 @@ export function generateInternationalCallingCode() {
 
 /**
  * @typedef {Object} UserCustomer
- * @property {string} id - The name of the user.
+ * @property {string} userId - The name of the user.
  * @property {string} name - The name of the user.
  * @property {string} phoneNumber - The phoneNumber of the user.
  */
