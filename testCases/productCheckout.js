@@ -85,7 +85,9 @@ export function TestCustomerGet(user, config, tags) {
 
     /** @type {import("../helpers/request.js").RequestAssertResponse} */
     let res;
-    const headers = {}
+    const headers = {
+        Authorization: `Bearer ${user.accessToken}`
+    }
 
     if (!config.LOAD_TEST) {
         res = testGetAssert(currentFeature, "get customer", currentRoute, {}, headers, {

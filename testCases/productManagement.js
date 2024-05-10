@@ -194,6 +194,7 @@ export function TestProductManagementGet(user, config, tags) {
             ['should return 200']: (res) => res.status === 200,
             ['should have return ordered by oldest first']: (res) => isOrdered(res, 'data[].createdAt', 'asc', (v) => new Date(v)),
         }, config, tags);
+        // TODO: add inStock search
         const paginationRes = testGetAssert(currentFeature, 'get product filtered by pagination', currentRoute, {
             limit: 2,
             offset: 0
