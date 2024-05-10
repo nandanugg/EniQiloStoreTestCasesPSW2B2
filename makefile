@@ -1,7 +1,7 @@
 
 .PHONY: run_debug
 run_debug:
-	git pull origin main && DEBUG_ALL=true k6 run script.js > output.txt
+	git pull origin main && DEBUG_ALL=true k6 run script.js > output.txt 2>&1
 
 .PHONY: run_timed
 run_timed:
