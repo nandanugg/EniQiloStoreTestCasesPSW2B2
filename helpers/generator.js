@@ -97,7 +97,7 @@ export function generateRandomDescription(maxLength = 20) {
  * @returns {number} - The generated random number.
  */
 export function generateRandomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min).toString();
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 /**
