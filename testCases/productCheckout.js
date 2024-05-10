@@ -137,17 +137,17 @@ export function TestCustomerGet(user, config, tags) {
             ['should return 201']: (res) => res.status === 201,
         }, config, tags)
 
-        testGetAssert(currentFeature, 'get product with an "c" in the name', currentRoute, {
+        testGetAssert(currentFeature, 'get customer with an "c" in the name', currentRoute, {
             name: "c"
         }, headers, {
             ['should return 200']: (res) => res.status === 200,
             ['should have an "c" in the result']: (res) => isEqualWith(res, 'data[].name', (v) => v.every(a => a.includes("c"))),
         }, config, tags);
-        testGetAssert(currentFeature, 'get product with phone number', currentRoute, {
+        testGetAssert(currentFeature, 'get customer with phone number', currentRoute, {
             phoneNumber: phoneNumberToSearch
         }, headers, {
             ['should return 200']: (res) => res.status === 200,
-            ['should have an "c" in the result']: (res) => isEqualWith(res, 'data[].name', (v) => v.every(a => a.includes(phoneNumberToSearch))),
+            ['should have a phone number that is searched']: (res) => isEqualWith(res, 'data[].name', (v) => v.every(a => a.includes(`+${phoneNumberToSearch}`))),
         }, config, tags);
     }
 
