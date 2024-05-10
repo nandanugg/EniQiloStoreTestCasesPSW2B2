@@ -35,7 +35,7 @@ export function TestCustomerGetProduct(user, config, tags) {
 
     if (!config.POSITIVE_CASE) {
         const categoryToSearch = getRandomCategory()
-        const skuToSearch = generateRandomNumber(10000000000, MaxInt)
+        const skuToSearch = `${generateRandomNumber(10000000000, MaxInt)}`
 
         let nameToAdd = generateRandomName()
         if (!nameToAdd.includes("b")) {
@@ -53,7 +53,7 @@ export function TestCustomerGetProduct(user, config, tags) {
         }), postFeatureHeaders, {
             ['should return 201']: (res) => res.status === 201,
         }, config, tags)
-        testPostJsonAssert(currentFeature, 'add product with seached sku', postFeatureRoute, Object.assign(generateProduct(), {
+        testPostJsonAssert(currentFeature, 'add product with searched sku', postFeatureRoute, Object.assign(generateProduct(), {
             sku: skuToSearch
         }), postFeatureHeaders, {
             ['should return 201']: (res) => res.status === 201,
