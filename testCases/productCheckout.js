@@ -177,6 +177,7 @@ const customerCheckoutNegativePayloads = (positivePayload) => generateTestObject
  * @typedef {Object} ProductDetailsCheckout
  * @property {string} productId - The id of the customer
  * @property {number} quantity - The quantity of the product
+ * @property {number} originalStock - The original stock of the product
  */
 
 /**
@@ -243,11 +244,13 @@ export function TestCustomerCheckout(user, config, tags) {
         totalPrice += product.price * quantity
         productsToBuy.push({
             productId: product.id,
-            quantity
+            quantity,
+            originalStock: product.stock
         })
         productsToBuyButQuantityIsNotEnough.push({
             productId: product.id,
-            quantity: quantity + 100000
+            quantity: quantity + 100000,
+            originalStock: product.stock
         })
     });
 
@@ -331,7 +334,7 @@ export function TestCustomerCheckout(user, config, tags) {
                 id: product.productId
             }, headers, {
                 ['should return 200']: (res) => res.status === 200,
-                ['quantity should be less than previous get product']: (res) => isEqualWith(res, 'data[].stock', (v) => v.every(a => a < product.quantity)),
+                ['quantity should be less than previous get product']: (res) => isEqualWith(res, 'data[].stock', (v) => v.every(a => a < product.originalStock)),
             }, config, tags);
         });
     }
