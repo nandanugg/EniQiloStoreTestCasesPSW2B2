@@ -20,7 +20,6 @@ export function TestLogin(user, config, tags) {
     const currentFeature = "login"
 
     if (!isUserValid(user)) {
-        if (config.DEBUG_ALL) console.log("Invalid user object", user)
         fail("Invalid user object")
     }
 

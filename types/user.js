@@ -16,7 +16,6 @@ import { generateRandomNumber } from "../helpers/generator.js";
 export function isUserValid(usrs) {
     if (
         typeof usrs === 'object' &&
-        typeof usrs.name === 'string' &&
         typeof usrs.phoneNumber === 'string' &&
         typeof usrs.password === 'string' &&
         typeof usrs.accessToken === 'string'
