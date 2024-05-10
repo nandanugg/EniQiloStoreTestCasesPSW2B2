@@ -44,7 +44,7 @@ export function TestProductManagementPost(user, config, tags) {
     let res;
 
     if (!config.POSITIVE_CASE) {
-        testPostJsonAssert(currentFeature, "empty headers", currentRoute, {}, headers, {
+        testPostJsonAssert(currentFeature, "empty headers", currentRoute, {}, {}, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
         testPostJsonAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
@@ -95,7 +95,7 @@ export function TestProductManagementGet(user, config, tags) {
     let res;
 
     if (!config.POSITIVE_CASE) {
-        testGetAssert(currentFeature, "empty headers", currentRoute, {}, headers, {
+        testGetAssert(currentFeature, "empty headers", currentRoute, {}, {}, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
         testGetAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
@@ -267,7 +267,7 @@ export function TestProductManagementPut(user, config, tags) {
     const productToEdit = products[generateRandomNumber(0, products.length - 1)]
 
     if (!config.POSITIVE_CASE) {
-        testPutJsonAssert(currentFeature, "empty headers", currentRoute, {}, headers, {
+        testPutJsonAssert(currentFeature, "empty headers", currentRoute, {}, {}, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
         testPutJsonAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
@@ -339,7 +339,7 @@ export function TestProductManagementDelete(user, config, tags) {
     const productToDelete = products[generateRandomNumber(0, products.length - 1)]
 
     if (!config.POSITIVE_CASE) {
-        testDeleteAssert(currentFeature, "empty headers", currentRoute, {}, headers, {
+        testDeleteAssert(currentFeature, "empty headers", currentRoute, {}, {}, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
         testDeleteAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {

@@ -42,7 +42,7 @@ export function TestCustomerRegister(user, config, tags) {
     let res;
 
     if (!config.POSITIVE_CASE) {
-        testPostJsonAssert(currentFeature, "empty headers", currentRoute, {}, headers, {
+        testPostJsonAssert(currentFeature, "empty headers", currentRoute, {}, {}, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
         testPostJsonAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
@@ -171,10 +171,14 @@ const customerCheckoutNegativePayloads = (positivePayload) => generateTestObject
     paid: { type: "number", notNull: true, min: 1 },
     change: { type: "number", notNull: true, min: 0 },
 }, positivePayload)
-
+/** 
+ * @typedef {Object} ProductCheckout
+ * @property {string} customerId - The id of the customer
+ * @property {number} quantity - The quantity of the product
+ */
 export function TestCustomerCheckout(user, config, tags) {
     const currentRoute = `${config.BASE_URL}/v1/product/checkout`
-    const currentFeature = "post product"
+    const currentFeature = "customer checkout"
 
     if (!isUserValid(user)) {
         fail(`${currentFeature} Invalid user object`)
@@ -207,8 +211,9 @@ export function TestCustomerCheckout(user, config, tags) {
         productsIndexToBuy.push(generateRandomNumber(0, products.length - 1))
     }
     productsIndexToBuy = [...new Set(productsIndexToBuy)]
-
+    /** @type {ProductCheckout[]} */
     const productsToBuy = []
+    /** @type {ProductCheckout[]} */
     const productsToBuyButQuantityIsNotEnough = []
     let totalPrice = 0
     productsIndexToBuy.forEach(i => {
@@ -236,7 +241,7 @@ export function TestCustomerCheckout(user, config, tags) {
     let res;
 
     if (!config.POSITIVE_CASE) {
-        testPostJsonAssert(currentFeature, "empty headers", currentRoute, {}, headers, {
+        testPostJsonAssert(currentFeature, "empty headers", currentRoute, {}, {}, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
         testPostJsonAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
@@ -287,7 +292,8 @@ export function TestCustomerCheckout(user, config, tags) {
             fail(`${currentFeature}  Failed to add product with isAvailable == false`)
         }
         const productIdIsAvailableFalse = res.res.json().data.id
-        const productToBuyButOneItemIsAvailableFalse = [productsToBuy, {
+        /** @type {ProductCheckout[]} */
+        const productToBuyButOneItemIsAvailableFalse = [...productsToBuy, {
             productId: productIdIsAvailableFalse,
             quantity: productIsAvailabeFalseToAdd.stock - 1
         }]
@@ -302,22 +308,21 @@ export function TestCustomerCheckout(user, config, tags) {
 
     if (res.isSuccess && !config.POSITIVE_CASE) {
         productsToBuy.forEach(product => {
-            res = testGetAssert(currentFeature, "get product", `${config.BASE_URL}/v1/product`, {
+            res = testGetAssert(currentFeature, "get product that already been checkouted", `${config.BASE_URL}/v1/product`, {
                 id: product.productId
             }, headers, {
                 ['should return 200']: (res) => res.status === 200,
-                ['quantity should be less than previous get product']: (res) => res.status === 200,
+                ['quantity should be less than previous get product']: (res) => isEqualWith(res, 'data[].stock', (v) => v.every(a => a < product.quantity)),
             }, config, tags);
         });
-
     }
 
     return null
 }
 
 export function TestCustomerCheckoutHistory(user, config, tags) {
-    const currentRoute = `${config.BASE_URL}/v1/product/checkout`
-    const currentFeature = "post product"
+    const currentRoute = `${config.BASE_URL}/v1/product/checkout/history`
+    const currentFeature = "get customer product checkout history"
 
     if (!isUserValid(user)) {
         fail(`${currentFeature} Invalid user object`)
@@ -379,7 +384,7 @@ export function TestCustomerCheckoutHistory(user, config, tags) {
     let res;
 
     if (!config.POSITIVE_CASE) {
-        testPostJsonAssert(currentFeature, "empty headers", currentRoute, {}, headers, {
+        testPostJsonAssert(currentFeature, "empty headers", currentRoute, {}, {}, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
         testPostJsonAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
