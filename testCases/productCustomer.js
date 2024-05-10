@@ -10,7 +10,7 @@ import { generateProduct, getRandomCategory } from "../types/product.js";
  * @param {Object} tags
  * @param {import("../types/user.js").User} user 
  */
-export function TestCustomerGet(user, config, tags) {
+export function TestCustomerGetProduct(user, config, tags) {
     const currentRoute = `${config.BASE_URL}/v1/product/customer`
     const currentFeature = "get product customer"
 
