@@ -7,11 +7,16 @@ import { generateProduct, getRandomCategory } from "../types/product.js";
 import { isEqualWith, isExists, isOrdered, isTotalDataInRange, isValidDate, isValidUrl } from "../helpers/assertion.js";
 
 const productNegativePayload = (positivePayload) => generateTestObjects({
-    phoneNumber: { type: "string", notNull: true, minLength: 10, maxLength: 16 },
-    name: { type: "string", notNull: true, minLength: 5, maxLength: 50 },
-    password: { type: "string", minLength: 5, maxLength: 15, notNull: true }
+    name: { notNull: true, type: 'string', minLength: 1, maxLength: 30 },
+    sku: { notNull: true, type: 'string', minLength: 1, maxLength: 30 },
+    category: { notNull: true, type: 'string', enum: ["Clothing", "Accessories", "Footwear", "Beverages"] },
+    imageUrl: { notNull: true, type: 'string', isUrl: true },
+    notes: { notNull: true, type: 'string', minLength: 1, maxLength: 200 },
+    price: { notNull: true, type: 'number', min: 1 },
+    stock: { notNull: true, type: 'number', min: 1, max: 100000 },
+    location: { notNull: true, type: 'string', minLength: 1, maxLength: 200 },
+    isAvailable: { notNull: true, type: 'boolean' },
 }, positivePayload)
-
 
 /**
  * 
