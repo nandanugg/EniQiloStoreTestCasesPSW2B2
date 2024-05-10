@@ -271,38 +271,48 @@ export function TestCustomerCheckout(user, config, tags) {
                 ['should return 400']: (res) => res.status === 400,
             }, config, tags);
         });
-        testPostJsonAssert(currentFeature, "productId is not found", currentRoute, Object.assign(customerCheckoutPositivePayload, {
-            productDetails: [{
-                productId: "notfound",
-                quantity: 1
-            }]
-        }), headers, {
+        testPostJsonAssert(currentFeature, "productId is not found", currentRoute, {
+            ...customerCheckoutPositivePayload, ...{
+                productDetails: [{
+                    productId: "notfound",
+                    quantity: 1
+                }]
+            }
+        }, headers, {
             ['should return 404']: (res) => res.status === 404,
         }, config, tags);
 
-        testPostJsonAssert(currentFeature, "paid is not enough", currentRoute, Object.assign(customerCheckoutPositivePayload, {
-            paid: totalPrice - 1
-        }), headers, {
+        testPostJsonAssert(currentFeature, "paid is not enough", currentRoute, {
+            ...customerCheckoutPositivePayload, ...{
+                paid: totalPrice - 1
+            }
+        }, headers, {
             ['should return 400']: (res) => res.status === 400,
         }, config, tags);
 
-        testPostJsonAssert(currentFeature, "change is not right", currentRoute, Object.assign(customerCheckoutPositivePayload, {
-            paid: totalPrice + 10,
-            change: 0
-        }), headers, {
+        testPostJsonAssert(currentFeature, "change is not right", currentRoute, {
+            ...customerCheckoutPositivePayload, ...{
+                paid: totalPrice + 10,
+                change: 0
+            }
+        }, headers, {
             ['should return 400']: (res) => res.status === 400,
         }, config, tags);
 
-        testPostJsonAssert(currentFeature, "one of product ids is not enough", currentRoute, Object.assign(customerCheckoutPositivePayload, {
-            productDetails: productsToBuyButQuantityIsNotEnough
-        }), headers, {
+        testPostJsonAssert(currentFeature, "one of product ids is not enough", currentRoute, {
+            ...customerCheckoutPositivePayload, ...{
+                productDetails: productsToBuyButQuantityIsNotEnough
+            }
+        }, headers, {
             ['should return 400']: (res) => res.status === 400,
         }, config, tags);
 
 
-        const productIsAvailabeFalseToAdd = Object.assign(generateProduct(), {
-            isAvailable: false,
-        })
+        const productIsAvailabeFalseToAdd = {
+            ...generateProduct(), ...{
+                isAvailable: false,
+            }
+        }
         res = testPostJsonAssert(currentFeature, 'add product with searched category', `${config.BASE_URL}/v1/product`, productIsAvailabeFalseToAdd, headers, {
             ['should return 201']: (res) => res.status === 201,
         }, config, tags)
