@@ -92,9 +92,9 @@ export function TestCustomerGet(user, config, tags) {
     if (!config.LOAD_TEST) {
         res = testGetAssert(currentFeature, "get customer", currentRoute, {}, headers, {
             ['should return 200']: (res) => res.status === 200,
-            ['should return have a userId']: (res) => isExists(res, "data.userId"),
-            ['should return have a phoneNumber']: (res) => isExists(res, "data.phoneNumber"),
-            ['should return have a name']: (res) => isExists(res, "data.name"),
+            ['should return have a userId']: (res) => isExists(res, "data[].userId"),
+            ['should return have a phoneNumber']: (res) => isExists(res, "data[].phoneNumber"),
+            ['should return have a name']: (res) => isExists(res, "data[].name"),
         }, config, tags);
     } else {
         // limit search by name to prevent too many data
@@ -104,9 +104,9 @@ export function TestCustomerGet(user, config, tags) {
             name: nameToSearch
         }, headers, {
             ['should return 200']: (res) => res.status === 200,
-            ['should return have a userId']: (res) => isExists(res, "data.userId"),
-            ['should return have a phoneNumber']: (res) => isExists(res, "data.phoneNumber"),
-            ['should return have a name']: (res) => isExists(res, "data.name"),
+            ['should return have a userId']: (res) => isExists(res, "data[].userId"),
+            ['should return have a phoneNumber']: (res) => isExists(res, "data[].phoneNumber"),
+            ['should return have a name']: (res) => isExists(res, "data[].name"),
         }, config, tags);
     }
 
