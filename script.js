@@ -61,6 +61,6 @@ export default function () {
         TestCustomerRegister(user, config, tags)
         TestCustomerGet(user, config, tags)
         const productCheckout = TestCustomerCheckout(user, config, tags)
-        TestCustomerCheckoutHistory(user, productCheckout[0], config, tags)
+        TestCustomerCheckoutHistory(user, productCheckout, config, tags)
     }
 }
