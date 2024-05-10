@@ -294,7 +294,7 @@ export function TestProductManagementPut(user, config, tags) {
         ['should return 200']: (res) => res.status === 200,
         ['should have edited data']: (res) => isEqualWith(res, 'data[]', (v) => {
             try {
-                Object.keys(v[0]).forEach(key => {
+                Object.keys(productPositivePayload).forEach(key => {
                     if (v[0][key] !== productPositivePayload[key]) {
                         return false
                     }
