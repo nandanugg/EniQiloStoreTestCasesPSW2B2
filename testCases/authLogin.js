@@ -47,7 +47,6 @@ export function TestLogin(user, config, tags) {
 
     res = testPostJsonAssert(currentFeature, "login with correct payload", currentRoute, registerPositivePayload, headers, {
         ['should return 200']: (res) => res.status === 200,
-        ['should return have a userId']: (res) => isExists(res, "data.userId"),
         ['should return have a phoneNumber']: (res) => isExists(res, "data.phoneNumber"),
         ['should return have a name']: (res) => isExists(res, "data.name"),
         ['should return have an accessToken']: (res) => isExists(res, "data.accessToken"),

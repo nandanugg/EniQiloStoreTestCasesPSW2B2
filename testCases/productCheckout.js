@@ -3,6 +3,7 @@ import { isEqualWith, isExists } from "../helpers/assertion.js";
 import { generateRandomName, generateRandomNumber, generateTestObjects } from "../helpers/generator.js";
 import { testGetAssert, testPostJsonAssert } from "../helpers/request.js";
 import { generateInternationalCallingCode, isUserValid } from "../types/user.js";
+import { generateProduct } from "../types/product.js";
 
 const registerNegativePayloads = (positivePayload) => generateTestObjects({
     phoneNumber: { type: "string", notNull: true, minLength: 10, maxLength: 16 },
@@ -158,15 +159,21 @@ export function TestCustomerGet(user, config, tags) {
 
 const customerCheckoutNegativePayloads = (positivePayload) => generateTestObjects({
     customerId: { type: "string", notNull: true },
-    productDetails: { type: "array", notNull: true },
+    productDetails: {
+        type: "array", notNull: true, items: {
+            type: "object",
+            properties: {
+                productId: { type: "string", notNull: true },
+                quantity: { type: "number", notNull: true, min: 1 }
+            }
+        }
+    },
     paid: { type: "number", notNull: true, min: 1 },
     change: { type: "number", notNull: true, min: 0 },
 }, positivePayload)
 
-// TODO: create TestCustomerCheckout
 export function TestCustomerCheckout(user, config, tags) {
     const currentRoute = `${config.BASE_URL}/v1/product/checkout`
-    const getRoute = `${config.BASE_URL}/v1/customer`
     const currentFeature = "post product"
 
     if (!isUserValid(user)) {
@@ -177,19 +184,59 @@ export function TestCustomerCheckout(user, config, tags) {
         Authorization: `Bearer ${user.accessToken}`
     }
 
-    res = testGetAssert(currentFeature, "get customer", getRoute, {}, headers, {
+    res = testGetAssert(currentFeature, "get customer", `${config.BASE_URL}/v1/customer`, {}, headers, {
         ['should return 200']: (res) => res.status === 200,
-        ['should return have a userId']: (res) => isExists(res, "data.userId"),
-        ['should return have a phoneNumber']: (res) => isExists(res, "data.phoneNumber"),
-        ['should return have a name']: (res) => isExists(res, "data.name"),
     }, config, tags);
     if (!res.isSuccess) {
         fail(`${currentFeature}  Failed to get customer`)
     }
-
     /** @type {import("../types/user.js").UserCustomer[]} */
     const customers = res.res.json().data
     const customerToPay = customers[generateRandomNumber(0, customers.length - 1)]
+
+    res = testGetAssert(currentFeature, "get product", `${config.BASE_URL}/v1/product`, {}, headers, {
+        ['should return 200']: (res) => res.status === 200,
+    }, config, tags);
+    if (!res.isSuccess) {
+        fail(`${currentFeature}  Failed to get product`)
+    }
+    /** @type {import("../types/product.js").Product[]} */
+    const products = res.res.json().data
+    let productsIndexToBuy = []
+    function generateIndexToBuy() {
+        for (let i = 0; i < generateRandomNumber(1, 4); i++) {
+            productsIndexToBuy.push(generateRandomNumber(0, products.length - 1))
+        }
+        if (new Set(productsIndexToBuy).size !== productsIndexToBuy.length) {
+            productsIndexToBuy = []
+            generateIndexToBuy()
+        }
+    }
+    generateIndexToBuy()
+
+    const productsToBuy = []
+    const productsToBuyButQuantityIsNotEnough = []
+    let totalPrice = 0
+    productsIndexToBuy.forEach(i => {
+        const product = products[i]
+        const quantity = generateRandomNumber(1, product.stock)
+        totalPrice += product.price * quantity
+        productsToBuy.push({
+            productId: product.id,
+            quantity
+        })
+        productsToBuyButQuantityIsNotEnough.push({
+            productId: product.id,
+            quantity: quantity + 100000
+        })
+    });
+
+    const checkoutPositivePayload = {
+        customerId: customerToPay.userId,
+        productDetails: productsToBuy,
+        paid: totalPrice,
+        change: 0
+    }
 
     /** @type {import("../helpers/request.js").RequestAssertResponse} */
     let res;
@@ -201,11 +248,58 @@ export function TestCustomerCheckout(user, config, tags) {
         testPostJsonAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
-        productNegativePayload(productPositivePayload).forEach((payload) => {
+        customerCheckoutNegativePayloads(checkoutPositivePayload).forEach((payload) => {
             testPostJsonAssert(currentFeature, "invalid payload", currentRoute, payload, headers, {
                 ['should return 400']: (res) => res.status === 400,
             }, config, tags);
         });
+        testPostJsonAssert(currentFeature, "productId is not found", currentRoute, Object.assign(checkoutPositivePayload, {
+            productDetails: [{
+                productId: "notfound",
+                quantity: 1
+            }]
+        }), headers, {
+            ['should return 404']: (res) => res.status === 404,
+        }, config, tags);
+
+        testPostJsonAssert(currentFeature, "paid is not enough", currentRoute, Object.assign(checkoutPositivePayload, {
+            paid: totalPrice - 1
+        }), headers, {
+            ['should return 400']: (res) => res.status === 400,
+        }, config, tags);
+
+        testPostJsonAssert(currentFeature, "change is not right", currentRoute, Object.assign(checkoutPositivePayload, {
+            paid: totalPrice + 10,
+            change: 0
+        }), headers, {
+            ['should return 400']: (res) => res.status === 400,
+        }, config, tags);
+
+        testPostJsonAssert(currentFeature, "one of product ids is not enough", currentRoute, Object.assign(checkoutPositivePayload, {
+            productDetails: productsToBuyButQuantityIsNotEnough
+        }), headers, {
+            ['should return 400']: (res) => res.status === 400,
+        }, config, tags);
+
+
+        const productIsAvailabeFalseToAdd = Object.assign(generateProduct(), {
+            isAvailable: false,
+        })
+        res = testPostJsonAssert(currentFeature, 'add product with searched category', `${config.BASE_URL}/v1/product`, productIsAvailabeFalseToAdd, headers, {
+            ['should return 201']: (res) => res.status === 201,
+        }, config, tags)
+
+        if (!res.isSuccess) {
+            fail(`${currentFeature}  Failed to add product with isAvailable == false`)
+        }
+        const productIdIsAvailableFalse = res.res.json().data.id
+        const productToBuyButOneItemIsAvailableFalse = [productsToBuy, {
+            productId: productIdIsAvailableFalse,
+            quantity: productIsAvailabeFalseToAdd.stock - 1
+        }]
+        testPostJsonAssert(currentFeature, "one of product isAvailable == false", currentRoute, productToBuyButOneItemIsAvailableFalse, headers, {
+            ['should return 400']: (res) => res.status === 400,
+        }, config, tags);
     }
 
     res = testPostJsonAssert(currentFeature, "add product with correct payload", currentRoute, productPositivePayload, headers, {

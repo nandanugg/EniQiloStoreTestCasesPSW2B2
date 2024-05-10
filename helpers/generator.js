@@ -132,21 +132,21 @@ export function generateTestObjects(schema, validTemplate) {
 
     function addViolation(path, violation) {
         const testCase = clone(validTemplate);
-        let parts = path.split('.');
+        let parts = path.split(".");
         let subObject = testCase;
         for (let i = 0; i < parts.length - 1; i++) {
-            if (parts[i].endsWith(']')) {
+            if (parts[i].endsWith("]")) {
                 let index = parts[i].match(/\[(\d+)\]/)[1];
-                parts[i] = parts[i].replace(/\[\d+\]/, '');
+                parts[i] = parts[i].replace(/\[\d+\]/, "");
                 subObject = subObject[parts[i]][index];
             } else {
                 subObject = subObject[parts[i]];
             }
         }
         let lastPart = parts[parts.length - 1];
-        if (lastPart.endsWith(']')) {
+        if (lastPart.endsWith("]")) {
             let index = lastPart.match(/\[(\d+)\]/)[1];
-            lastPart = lastPart.replace(/\[\d+\]/, '');
+            lastPart = lastPart.replace(/\[\d+\]/, "");
             subObject[lastPart][index] = violation;
         } else {
             subObject[lastPart] = violation;
@@ -156,15 +156,15 @@ export function generateTestObjects(schema, validTemplate) {
 
     function generateDataTypeViolations(propPath, type) {
         const dataTypes = {
-            'string': ["", 123, true, {}, []],
-            'string-param': [123, true, {}, []],
-            'number': ["notANumber", true, {}, []],
-            'boolean': ["notABoolean", 123, {}, []],
-            'object': ["notAnObject", 123, true, []], // Assuming a non-empty object is valid
-            'array': ["notAnArray", 123, true, {}]
+            string: ["", 123, true, {}, []],
+            "string-param": [123, true, {}, []],
+            number: ["notANumber", true, {}, []],
+            boolean: ["notABoolean", 123, {}, []],
+            object: ["notAnObject", 123, true, []], // Assuming a non-empty object is valid
+            array: ["notAnArray", 123, true, {}],
         };
 
-        dataTypes[type].forEach(violation => {
+        dataTypes[type].forEach((violation) => {
             addViolation(propPath, violation);
         });
     }
@@ -196,18 +196,18 @@ export function generateTestObjects(schema, validTemplate) {
             generateDataTypeViolations(propPath, propRules.type);
         }
         switch (propRules.type) {
-            case 'string', 'string-param':
+            case ("string", "string-param"):
                 if (propRules.minLength !== undefined) {
-                    addViolation(propPath, 'a'.repeat(propRules.minLength - 1));
+                    addViolation(propPath, "a".repeat(propRules.minLength - 1));
                 }
                 if (propRules.maxLength !== undefined) {
-                    addViolation(propPath, 'a'.repeat(propRules.maxLength + 1));
+                    addViolation(propPath, "a".repeat(propRules.maxLength + 1));
                 }
                 if (propRules.enum !== undefined) {
-                    addViolation(propPath, 'notAnEnumValue');
+                    addViolation(propPath, "notAnEnumValue");
                 }
                 break;
-            case 'number':
+            case "number":
                 if (propRules.min !== undefined) {
                     addViolation(propPath, propRules.min - 1);
                 }
@@ -215,19 +215,38 @@ export function generateTestObjects(schema, validTemplate) {
                     addViolation(propPath, propRules.max + 1);
                 }
                 break;
-            case 'array':
+            case "array":
                 if (propRules.items && propRules.items.notNull) {
                     addViolation(`${propPath}[0]`, null); // Violates notNull for array items
                 }
-                if (propRules.items && propRules.items.type === 'string') {
+                if (propRules.items && propRules.items.type === "string") {
                     // Already handled by generateDataTypeViolations
                 }
+                if (propRules.items && propRules.items.type === "object") {
+                    if (propRules.items.properties) {
+                        Object.entries(propRules.items.properties).forEach(
+                            ([nestedProp, nestedRules]) => {
+                                generateViolationsForProp(
+                                    `${propPath}[0].${nestedProp}`,
+                                    nestedRules,
+                                    parentValue[nestedProp],
+                                );
+                            },
+                        );
+                    }
+                }
                 break;
-            case 'object':
+            case "object":
                 if (propRules.properties) {
-                    Object.entries(propRules.properties).forEach(([nestedProp, nestedRules]) => {
-                        generateViolationsForProp(`${propPath}.${nestedProp}`, nestedRules, parentValue[nestedProp]);
-                    });
+                    Object.entries(propRules.properties).forEach(
+                        ([nestedProp, nestedRules]) => {
+                            generateViolationsForProp(
+                                `${propPath}.${nestedProp}`,
+                                nestedRules,
+                                parentValue[nestedProp],
+                            );
+                        },
+                    );
                 }
                 break;
         }
