@@ -256,7 +256,7 @@ export function TestCustomerCheckout(user, config, tags) {
 
     /** @type {ProductCheckout} */
     const customerCheckoutPositivePayload = {
-        customerId: customerToPay.userId,
+        customerId: customerToPay.id,
         productDetails: productsToBuy,
         paid: totalPrice,
         change: 0
