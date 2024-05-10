@@ -101,7 +101,7 @@ export function TestCustomerGetProduct(user, config, tags) {
                 ['should have a different data than offset 0']: (res) => {
                     try {
                         return res.json().data.every(e => {
-                            return paginationRes.res.json().data.every(a => a.id !== e.id)
+                            return paginationRes.res.json().data.every(a => a.transactionId !== e.transactionId)
                         })
                     } catch (error) {
                         return false
