@@ -2,7 +2,7 @@
 import { config } from './config.js';
 import { TestLogin } from './testCases/authLogin.js';
 import { TestRegister } from './testCases/authRegister.js';
-import { TestCustomerCheckout, TestCustomerCheckoutHistory } from './testCases/productCheckout.js';
+import { TestCustomerCheckout, TestCustomerCheckoutHistory, TestCustomerGet, TestCustomerRegister } from './testCases/productCheckout.js';
 import { TestCustomerGetProduct } from './testCases/productCustomer.js';
 import { TestProductManagementDelete, TestProductManagementGet, TestProductManagementPost, TestProductManagementPut } from './testCases/productManagement.js';
 
@@ -58,6 +58,8 @@ export default function () {
         TestProductManagementDelete(user, config, tags)
 
         TestCustomerGetProduct(user, config, tags)
+        TestCustomerRegister(user, config, tags)
+        TestCustomerGet(user, config, tags)
         const productCheckout = TestCustomerCheckout(user, config, tags)
         TestCustomerCheckoutHistory(user, productCheckout[0], config, tags)
     }
