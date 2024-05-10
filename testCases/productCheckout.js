@@ -357,6 +357,9 @@ export function TestCustomerCheckoutHistory(user, productCheckoutToCheck, config
     if (!isUserValid(user)) {
         fail(`${currentFeature} Invalid user object`)
     }
+    if (!productCheckoutToCheck) {
+        fail(`${currentFeature} Invalid productCheckoutToCheck object`)
+    }
 
     const headers = {
         Authorization: `Bearer ${user.accessToken}`
