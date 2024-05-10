@@ -36,7 +36,7 @@ export function generateProduct() {
         imageUrl: generateRandomImageUrl(),
         notes: generateRandomDescription(200),
         isAvailable: true,
-        stock: generateRandomNumber(1, 100),
+        stock: generateRandomNumber(0, 100),
         price: generateRandomNumber(1, 1000),
         location: generateRandomDescription()
     }
