@@ -274,14 +274,14 @@ export function TestProductManagementPut(user, config, tags) {
         testPutJsonAssert(currentFeature, "invalid authorization header", `${currentRoute}/a`, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
-        testPutJsonAssert(currentFeature, "invalid id", `${currentRoute}/asd`, {}, headers, {
-            ['should return 404']: (res) => res.status === 404,
-        }, config, tags);
         productNegativePayload(productPositivePayload).forEach((payload) => {
             testPutJsonAssert(currentFeature, "invalid payload", `${currentRoute}/${productToEdit.id}`, payload, headers, {
                 ['should return 400']: (res) => res.status === 400,
             }, config, tags);
         });
+        testPutJsonAssert(currentFeature, "invalid id", `${currentRoute}/asd`, productPositivePayload, headers, {
+            ['should return 404']: (res) => res.status === 404,
+        }, config, tags);
     }
 
 
