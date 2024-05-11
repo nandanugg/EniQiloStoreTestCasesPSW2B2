@@ -30,7 +30,7 @@ if (config.LOAD_TEST) {
 function determineStage() {
     let elapsedTime = (exec.instance.currentTestRunDuration / 1000).toFixed(0);
     if (elapsedTime < 5) return 1; // First 5 seconds
-    if (elapsedTime < 15) return 2; // Next 10 seconds
+    if (elapsedTime < 10) return 2; // Next 10 seconds
     if (elapsedTime < 35) return 3; // Next 20 seconds
     if (elapsedTime < 55) return 4; // Next 20 seconds
     if (elapsedTime < 75) return 5; // Next 20 seconds
@@ -52,13 +52,13 @@ function calculatePercentage(percentage, __VU) {
     return (__VU - 1) % Math.ceil(__VU / Math.round(__VU * percentage)) === 0;
 }
 
-export default function () {
-    const users = []
-    function getRandomUser() {
-        const i = generateRandomNumber(0, users.length - 1)
-        return users[i]
-    }
+const users = []
+function getRandomUser() {
+    const i = generateRandomNumber(0, users.length - 1)
+    return users[i]
+}
 
+export default function () {
     let tags = {}
 
     if (config.LOAD_TEST) {
@@ -85,10 +85,8 @@ export default function () {
             }
 
         } else if (determineStage() == 2) {
-            if (calculatePercentage(0.5, __VU)) {
-                let user = TestRegister(positiveCaseConfig, tags)
-                users.push(user)
-            }
+            let user = TestRegister(positiveCaseConfig, tags)
+            users.push(user)
             TestLogin(getRandomUser(), positiveCaseConfig, tags)
             for (let i = 0; i < 10; i++) {
                 TestProductManagementPost(getRandomUser(), positiveCaseConfig, tags)
@@ -109,10 +107,8 @@ export default function () {
                 TestCustomerCheckout(getRandomUser(), positiveCaseConfig, tags)
             }
         } else if (determineStage() == 3) {
-            if (calculatePercentage(0.1, __VU)) {
-                let user = TestRegister(positiveCaseConfig, tags)
-                users.push(user)
-            }
+            let user = TestRegister(positiveCaseConfig, tags)
+            users.push(user)
             TestLogin(getRandomUser(), positiveCaseConfig, tags)
             for (let i = 0; i < 10; i++) {
                 if (calculatePercentage(0.2, __VU)) {
@@ -143,6 +139,8 @@ export default function () {
                 TestCustomerCheckoutHistory(user, productCheckout, positiveCaseConfig, tags)
             }
         } else if (determineStage() == 4) {
+            let user = TestRegister(positiveCaseConfig, tags)
+            users.push(user)
             TestLogin(getRandomUser(), positiveCaseConfig, tags)
             for (let i = 0; i < 5; i++) {
                 TestProductManagementGet(getRandomUser(), positiveCaseConfig, tags)
@@ -170,6 +168,8 @@ export default function () {
                 TestCustomerCheckoutHistory(user, productCheckout, positiveCaseConfig, tags)
             }
         } else if (determineStage() == 5) {
+            let user = TestRegister(positiveCaseConfig, tags)
+            users.push(user)
             TestLogin(getRandomUser(), positiveCaseConfig, tags)
             for (let i = 0; i < 5; i++) {
                 TestProductManagementGet(getRandomUser(), positiveCaseConfig, tags)
