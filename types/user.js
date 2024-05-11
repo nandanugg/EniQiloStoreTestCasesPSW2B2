@@ -10,15 +10,15 @@ import { generateRandomNumber } from "../helpers/generator.js";
 
 /**
  * validate user object
- * @param {User} usrs 
+ * @param {User} usr 
  * @returns {Boolean}
  */
-export function isUserValid(usrs) {
+export function isUserValid(usr) {
     if (
-        typeof usrs === 'object' &&
-        typeof usrs.phoneNumber === 'string' &&
-        typeof usrs.password === 'string' &&
-        typeof usrs.accessToken === 'string'
+        typeof usr === 'object' &&
+        typeof usr.phoneNumber === 'string' &&
+        typeof usr.password === 'string' &&
+        typeof usr.accessToken === 'string'
     ) {
         return true;
     }

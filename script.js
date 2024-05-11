@@ -92,7 +92,7 @@ export default function () {
                 let user = TestRegister(positiveCaseConfig, tags)
                 users.push(user)
             }
-            TestLogin(getRandomUser(), tags)
+            TestLogin(getRandomUser(), positiveCaseConfig, tags)
             for (let i = 0; i < 10; i++) {
                 TestProductManagementPost(getRandomUser(), positiveCaseConfig, tags)
                 TestProductManagementGet(getRandomUser(), positiveCaseConfig, tags)
@@ -116,7 +116,7 @@ export default function () {
                 let user = TestRegister(positiveCaseConfig, tags)
                 users.push(user)
             }
-            TestLogin(getRandomUser(), tags)
+            TestLogin(getRandomUser(), positiveCaseConfig, tags)
             for (let i = 0; i < 10; i++) {
                 if (calculatePercentage(0.2, __VU)) {
                     TestProductManagementPost(getRandomUser(), positiveCaseConfig, tags)
@@ -146,7 +146,7 @@ export default function () {
                 TestCustomerCheckoutHistory(user, productCheckout, positiveCaseConfig, tags)
             }
         } else if (determineStage() == 4) {
-            TestLogin(getRandomUser(), tags)
+            TestLogin(getRandomUser(), positiveCaseConfig, tags)
             for (let i = 0; i < 5; i++) {
                 TestProductManagementGet(getRandomUser(), positiveCaseConfig, tags)
             }
@@ -173,7 +173,7 @@ export default function () {
                 TestCustomerCheckoutHistory(user, productCheckout, positiveCaseConfig, tags)
             }
         } else if (determineStage() == 5) {
-            TestLogin(getRandomUser(), tags)
+            TestLogin(getRandomUser(), positiveCaseConfig, tags)
             for (let i = 0; i < 5; i++) {
                 TestProductManagementGet(getRandomUser(), positiveCaseConfig, tags)
             }
