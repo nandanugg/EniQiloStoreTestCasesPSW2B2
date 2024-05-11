@@ -6,14 +6,9 @@ import { TestCustomerCheckout, TestCustomerCheckoutHistory, TestCustomerGet, Tes
 import { TestCustomerGetProduct } from './testCases/productCustomer.js';
 import { TestProductManagementDelete, TestProductManagementGet, TestProductManagementPost, TestProductManagementPut } from './testCases/productManagement.js';
 
-export const options = {
-    stages: [],
-    summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(95)', 'p(99)'],
-};
+const stages = []
 
-// Ramping up from 50 VUs to 300 VUs if __ENV.LOAD_TEST is true
-// eslint-disable-next-line no-undef
-if (__ENV.LOAD_TEST) {
+if (config.LOAD_TEST) {
     options.stages.push(
         { target: 50, iterations: 1, duration: "15s" },
         { target: 100, iterations: 1, duration: "15s" },
@@ -29,9 +24,16 @@ if (__ENV.LOAD_TEST) {
         iterations: 1
     });
 }
-// const positiveCaseConfig = Object.assign(config, {
+export const options = {
+    stages,
+    summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(95)', 'p(99)'],
+};
+
+// const positiveCaseConfig = Object.assign(clone(config), {
 //     POSITIVE_CASE: true
 // })
+
+
 
 export default function () {
     // let currentUser;
@@ -49,6 +51,8 @@ export default function () {
     // const percentageVUs80 = (__VU - 1) % Math.ceil(totalVUs / Math.round(totalVUs * 0.8)) === 0; // Calculate 80% of total VUs
     // const percentageVUs90 = (__VU - 1) % Math.ceil(totalVUs / Math.round(totalVUs * 0.9)) === 0; // Calculate 90% of total VUs
 
+    // if (config.LOAD_TEST) {
+    // } else {
     let user = TestRegister(config, tags)
     if (user) {
         user = TestLogin(user, config, tags)
@@ -63,4 +67,5 @@ export default function () {
         const productCheckout = TestCustomerCheckout(user, config, tags)
         TestCustomerCheckoutHistory(user, productCheckout, config, tags)
     }
+    // }
 }

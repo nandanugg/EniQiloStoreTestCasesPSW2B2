@@ -207,60 +207,67 @@ export function TestCustomerCheckout(user, config, tags) {
         Authorization: `Bearer ${user.accessToken}`
     }
 
-    /** @type {import("../helpers/request.js").RequestAssertResponse} */
-    let res = testGetAssert(currentFeature, "get customer", `${config.BASE_URL}/v1/customer`, {}, headers, {
-        ['should return 200']: (res) => res.status === 200,
-    }, config, tags);
-    if (!res.isSuccess) {
-        fail(`${currentFeature}  Failed to get customer`)
-    }
-    /** @type {import("../types/user.js").UserCustomer[]} */
-    const customers = res.res.json().data
-    const customerToPay = customers[generateRandomNumber(0, customers.length - 1)]
+    let res;
 
-    res = testGetAssert(currentFeature, "get product", `${config.BASE_URL}/v1/product/customer`, {
-        inStock: true
-    }, headers, {
-        ['should return 200']: (res) => res.status === 200,
-    }, config, tags);
-    if (!res.isSuccess) {
-        fail(`${currentFeature}  Failed to get product`)
-    }
-    /** @type {import("../types/product.js").Product[]} */
-    const products = res.res.json().data
-    let productsIndexToBuy = []
-    for (let i = 0; i < generateRandomNumber(1, 4); i++) {
-        productsIndexToBuy.push(generateRandomNumber(0, products.length - 1))
-    }
-    productsIndexToBuy = [...new Set(productsIndexToBuy)]
     /** @type {ProductDetailsCheckout[]} */
     const productsToBuy = []
     /** @type {ProductDetailsCheckout[]} */
     const productsToBuyButQuantityIsNotEnough = []
     let totalPrice = 0
-    productsIndexToBuy.forEach(i => {
-        const product = products[i]
-        const quantity = generateRandomNumber(1, product.stock)
-        totalPrice += product.price * quantity
-        productsToBuy.push({
-            productId: product.id,
-            quantity,
-            originalStock: product.stock
-        })
-        productsToBuyButQuantityIsNotEnough.push({
-            productId: product.id,
-            quantity: quantity + 100000,
-            originalStock: product.stock
-        })
-    });
+    /**
+     * @returns {ProductCheckout}
+     */
+    function composeProductToBuy() {
+        /** @type {import("../helpers/request.js").RequestAssertResponse} */
+        let res = testGetAssert(currentFeature, "get customer", `${config.BASE_URL}/v1/customer`, {}, headers, {
+            ['should return 200']: (res) => res.status === 200,
+        }, config, tags);
+        if (!res.isSuccess) {
+            fail(`${currentFeature}  Failed to get customer`)
+        }
+        /** @type {import("../types/user.js").UserCustomer[]} */
+        const customers = res.res.json().data
+        const customerToPay = customers[generateRandomNumber(0, customers.length - 1)]
 
-    /** @type {ProductCheckout} */
-    const customerCheckoutPositivePayload = {
-        customerId: customerToPay.userId,
-        productDetails: productsToBuy,
-        paid: totalPrice,
-        change: 0
+        res = testGetAssert(currentFeature, "get product", `${config.BASE_URL}/v1/product/customer`, {
+            inStock: true
+        }, headers, {
+            ['should return 200']: (res) => res.status === 200,
+        }, config, tags);
+        if (!res.isSuccess) {
+            fail(`${currentFeature}  Failed to get product`)
+        }
+        /** @type {import("../types/product.js").Product[]} */
+        const products = res.res.json().data
+        let productsIndexToBuy = []
+        for (let i = 0; i < generateRandomNumber(1, 4); i++) {
+            productsIndexToBuy.push(generateRandomNumber(0, products.length - 1))
+        }
+        productsIndexToBuy = [...new Set(productsIndexToBuy)]
+        productsIndexToBuy.forEach(i => {
+            const product = products[i]
+            const quantity = generateRandomNumber(1, product.stock)
+            totalPrice += product.price * quantity
+            productsToBuy.push({
+                productId: product.id,
+                quantity,
+                originalStock: product.stock
+            })
+            productsToBuyButQuantityIsNotEnough.push({
+                productId: product.id,
+                quantity: quantity + 100000,
+                originalStock: product.stock
+            })
+        });
+        return {
+            customerId: customerToPay.userId,
+            productDetails: productsToBuy,
+            paid: totalPrice,
+            change: 0
+        }
     }
+
+    let customerCheckoutPositivePayload = composeProductToBuy()
 
     if (!config.POSITIVE_CASE) {
         testPostJsonAssert(currentFeature, "empty headers", currentRoute, {}, {}, {
@@ -324,20 +331,38 @@ export function TestCustomerCheckout(user, config, tags) {
         }, config, tags);
     }
 
-    res = testPostJsonAssert(currentFeature, "checkout with correct payload", currentRoute, clone(customerCheckoutPositivePayload), headers, {
-        ['should return 200']: (res) => res.status === 200,
-    }, config, tags);
+    if (!config.LOAD_TEST) {
+        for (let i = 0; i < 10; i++) {
+            let payload
+            // only create new product to buy after the first iteration
+            if (i === 0) {
+                payload = clone(customerCheckoutPositivePayload)
+            } else {
+                payload = composeProductToBuy()
+            }
 
-    if (res.isSuccess && !config.POSITIVE_CASE) {
-        productsToBuy.forEach(product => {
-            res = testGetAssert(currentFeature, "get product that already been checkouted", `${config.BASE_URL}/v1/product`, {
-                id: product.productId
-            }, headers, {
+            res = testPostJsonAssert(currentFeature, "checkout with correct payload", currentRoute, payload, headers, {
                 ['should return 200']: (res) => res.status === 200,
-                ['quantity should be less than previous get product']: (res) => isEqualWith(res, 'data[].stock', (v) => v.every(a => a < product.originalStock)),
             }, config, tags);
-        });
+            if (res.isSuccess && !config.POSITIVE_CASE && i === 0) {
+                // only check product that already been checkouted after the first iteration
+                productsToBuy.forEach(product => {
+                    res = testGetAssert(currentFeature, "get product that already been checkouted", `${config.BASE_URL}/v1/product`, {
+                        id: product.productId
+                    }, headers, {
+                        ['should return 200']: (res) => res.status === 200,
+                        ['quantity should be less than previous get product']: (res) => isEqualWith(res, 'data[].stock', (v) => v.every(a => a < product.originalStock)),
+                    }, config, tags);
+                });
+            }
+        }
+    } else {
+        // run in normal behaviour if not in load test mode
+        testPostJsonAssert(currentFeature, "checkout with correct payload", currentRoute, clone(customerCheckoutPositivePayload), headers, {
+            ['should return 200']: (res) => res.status === 200,
+        }, config, tags);
     }
+
 
     return customerCheckoutPositivePayload
 }
@@ -373,9 +398,6 @@ export function TestCustomerCheckoutHistory(user, productCheckoutToCheck, config
         testGetAssert(currentFeature, "invalid authorization header", currentRoute, {}, { Authorization: `Bearer ${headers.Authorization}a`, }, {
             ['should return 401']: (res) => res.status === 401,
         }, config, tags);
-
-
-
     }
 
     testGetAssert(currentFeature, "get customer checkout history", currentRoute, {}, headers, {
