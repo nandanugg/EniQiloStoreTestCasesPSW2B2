@@ -386,7 +386,7 @@ export function TestCustomerCheckoutHistory(user, productCheckoutToCheck, config
     if (!isUserValid(user)) {
         fail(`${currentFeature} Invalid user object`)
     }
-    if (!productCheckoutToCheck) {
+    if (!productCheckoutToCheck && !config.LOAD_TEST) {
         fail(`${currentFeature} Invalid productCheckoutToCheck object`)
     }
 

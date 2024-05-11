@@ -11,6 +11,10 @@ run_timed:
 run:
 	git pull origin main && k6 run script.js
 
+.PHONY: runLoadTest
+runLoadTest:
+	git pull origin main && LOAD_TEST=true k6 run script.js
+
 .PHONY: run50
 run50:
 	LOAD_TEST=true k6 run -i 50 --vus 50 script.js | grep -E 'checks|http_req_duration|\{ expected_response:true \}'
