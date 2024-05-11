@@ -28,7 +28,7 @@ if (config.LOAD_TEST) {
 
 export const options = {
     stages,
-    summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(95)', 'p(99)'],
+    // summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(95)', 'p(99)'],
 };
 
 const positiveCaseConfig = Object.assign(clone(config), {
