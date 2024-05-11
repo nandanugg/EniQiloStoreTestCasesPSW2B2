@@ -210,14 +210,16 @@ export function TestCustomerCheckout(user, config, tags) {
     let res;
 
     /** @type {ProductDetailsCheckout[]} */
-    const productsToBuy = []
+    let productsToBuy = []
     /** @type {ProductDetailsCheckout[]} */
-    const productsToBuyButQuantityIsNotEnough = []
+    let productsToBuyButQuantityIsNotEnough = []
     let totalPrice = 0
     /**
      * @returns {ProductCheckout}
      */
     function composeProductToBuy() {
+        productsToBuy = []
+        productsToBuyButQuantityIsNotEnough = []
         /** @type {import("../helpers/request.js").RequestAssertResponse} */
         let res = testGetAssert(currentFeature, "get customer", `${config.BASE_URL}/v1/customer`, {}, headers, {
             ['should return 200']: (res) => res.status === 200,
@@ -344,6 +346,7 @@ export function TestCustomerCheckout(user, config, tags) {
             res = testPostJsonAssert(currentFeature, "checkout with correct payload", currentRoute, payload, headers, {
                 ['should return 200']: (res) => res.status === 200,
             }, config, tags);
+
             if (res.isSuccess && !config.POSITIVE_CASE && i === 0) {
                 // only check product that already been checkouted after the first iteration
                 productsToBuy.forEach(product => {
