@@ -28,7 +28,7 @@ if (config.LOAD_TEST) {
 }
 
 function determineStage() {
-    let elapsedTime = (new Date().getTime() - exec.instance.currentTestRunDuration) / 1000;
+    let elapsedTime = (exec.instance.currentTestRunDuration / 1000).toFixed(0);
     if (elapsedTime < 5) return 1; // First 5 seconds
     if (elapsedTime < 15) return 2; // Next 10 seconds
     if (elapsedTime < 35) return 3; // Next 20 seconds
@@ -64,10 +64,6 @@ function getRandomUser() {
 export default function () {
     // let currentUser;
     let tags = {}
-
-
-    let elapsedTime = (new Date().getTime() - exec.instance.currentTestRunDuration) / 1000;
-    console.log("elapsedTime: ", elapsedTime)
 
     if (config.LOAD_TEST) {
         if (determineStage() == 1) {
