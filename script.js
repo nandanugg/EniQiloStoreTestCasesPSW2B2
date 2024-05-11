@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+import { sleep } from 'k6';
 import { config } from './config.js';
 import { clone, generateRandomNumber } from './helpers/generator.js';
 import { TestLogin } from './testCases/authLogin.js';
@@ -214,4 +215,6 @@ export default function () {
             TestCustomerCheckoutHistory(user, productCheckout, config, tags)
         }
     }
+
+    sleep(1)
 }
