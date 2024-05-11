@@ -64,6 +64,10 @@ export default function () {
     // let currentUser;
     let tags = {}
 
+
+    let elapsedTime = (new Date().getTime() - __ENV.TEST_START_TIME) / 1000;
+    console.log("elapsedTime", elapsedTime)
+
     if (config.LOAD_TEST) {
         if (determineStage() == 1) {
             let user = TestRegister(positiveCaseConfig, tags)
