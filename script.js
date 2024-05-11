@@ -15,11 +15,11 @@ if (config.LOAD_TEST) {
     stages.push(
         { target: 50, iterations: 1, duration: "5s" },
         { target: 100, iterations: 1, duration: "10s" },
-        // { target: 150, iterations: 1, duration: "20s" },
-        // { target: 200, iterations: 1, duration: "20s" },
-        // { target: 250, iterations: 1, duration: "20s" },
-        // { target: 300, iterations: 1, duration: "20s" },
-        // { target: 600, iterations: 1, duration: "20s" }
+        { target: 150, iterations: 1, duration: "20s" },
+        { target: 200, iterations: 1, duration: "20s" },
+        { target: 250, iterations: 1, duration: "20s" },
+        { target: 300, iterations: 1, duration: "20s" },
+        { target: 600, iterations: 1, duration: "20s" }
     );
 } else {
     stages.push({
@@ -37,7 +37,7 @@ function determineStage() {
     if (elapsedTime < 75) return 5; // Next 20 seconds
     if (elapsedTime < 95) return 6; // Next 20 seconds
     if (elapsedTime < 115) return 7; // Next 20 seconds
-    return 3; // Remaining time
+    return 8; // Remaining time
 }
 
 export const options = {
