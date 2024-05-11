@@ -63,10 +63,39 @@ function getRandomUser() {
 export default function () {
     // let currentUser;
     let tags = {}
+    console.log(`Execution context
 
+Instance info
+-------------
+Vus active: ${exec.instance.vusActive}
+Iterations completed: ${exec.instance.iterationsCompleted}
+Iterations interrupted:  ${exec.instance.iterationsInterrupted}
+Iterations completed:  ${exec.instance.iterationsCompleted}
+Iterations active:  ${exec.instance.vusActive}
+Initialized vus:  ${exec.instance.vusInitialized}
+Time passed from start of run(ms):  ${exec.instance.currentTestRunDuration}
 
-    let elapsedTime = (new Date().getTime() - __ENV.TEST_START_TIME) / 1000;
-    console.log("elapsedTime", elapsedTime, __ENV.TEST_START_TIME)
+Scenario info
+-------------
+Name of the running scenario: ${exec.scenario.name}
+Executor type: ${exec.scenario.executor}
+Scenario start timestamp: ${exec.scenario.startTime}
+Percenatage complete: ${exec.scenario.progress}
+Iteration in instance: ${exec.scenario.iterationInInstance}
+Iteration in test: ${exec.scenario.iterationInTest}
+
+Test info
+---------
+All test options: ${exec.test.options}
+
+VU info
+-------
+Iteration id: ${exec.vu.iterationInInstance}
+Iteration in scenario: ${exec.vu.iterationInScenario}
+VU ID in instance: ${exec.vu.idInInstance}
+VU ID in test: ${exec.vu.idInTest}
+VU tags: ${exec.vu.tags}`);
+
 
     if (config.LOAD_TEST) {
         if (determineStage() == 1) {
