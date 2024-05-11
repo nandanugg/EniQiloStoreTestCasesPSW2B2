@@ -26,6 +26,18 @@ if (config.LOAD_TEST) {
     });
 }
 
+function determineStage() {
+    let elapsedTime = (new Date().getTime() - __ENV.TEST_START_TIME) / 1000;
+    if (elapsedTime < 5) return 1; // First 5 seconds
+    if (elapsedTime < 15) return 2; // Next 10 seconds
+    if (elapsedTime < 35) return 3; // Next 20 seconds
+    if (elapsedTime < 55) return 4; // Next 20 seconds
+    if (elapsedTime < 75) return 5; // Next 20 seconds
+    if (elapsedTime < 95) return 6; // Next 20 seconds
+    if (elapsedTime < 115) return 7; // Next 20 seconds
+    return 3; // Remaining time
+}
+
 export const options = {
     stages,
     // summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(95)', 'p(99)'],
@@ -36,8 +48,8 @@ const positiveCaseConfig = Object.assign(clone(config), {
 })
 
 
-function calculatePercentage(percentage, totalVUs) {
-    return (__VU - 1) % Math.ceil(totalVUs / Math.round(totalVUs * percentage)) === 0;
+function calculatePercentage(percentage, __VU) {
+    return (__VU - 1) % Math.ceil(__VU / Math.round(__VU * percentage)) === 0;
 }
 
 
@@ -51,35 +63,32 @@ function getRandomUser() {
 export default function () {
     // let currentUser;
     let tags = {}
-    const currentTarget = options.stages[0].target;
-    const currentStage = options.stages[0]; // Get the current stage
-    const totalVUs = currentStage.target; // Total VUs for the current stage
 
     if (config.LOAD_TEST) {
-        if (currentTarget == 50) {
+        if (determineStage() == 1) {
             let user = TestRegister(positiveCaseConfig, tags)
             users.push(user)
             for (let i = 0; i < 10; i++) {
                 TestProductManagementPost(getRandomUser(), positiveCaseConfig, tags)
                 TestProductManagementGet(getRandomUser(), positiveCaseConfig, tags)
             }
-            if (calculatePercentage(0.5, totalVUs)) {
+            if (calculatePercentage(0.5, __VU)) {
                 TestProductManagementPut(getRandomUser(), positiveCaseConfig, tags)
             }
-            if (calculatePercentage(0.1, totalVUs)) {
+            if (calculatePercentage(0.1, __VU)) {
                 TestProductManagementDelete(getRandomUser(), positiveCaseConfig, tags)
             }
             for (let i = 0; i < 20; i++) {
                 TestCustomerGetProduct(getRandomUser(), positiveCaseConfig, tags)
             }
 
-            if (calculatePercentage(0.5, totalVUs)) {
+            if (calculatePercentage(0.5, __VU)) {
                 TestCustomerRegister(getRandomUser(), positiveCaseConfig, tags)
                 TestCustomerCheckout(getRandomUser(), positiveCaseConfig, tags)
             }
 
-        } else if (currentTarget == 100) {
-            if (calculatePercentage(0.5, totalVUs)) {
+        } else if (determineStage() == 2) {
+            if (calculatePercentage(0.5, __VU)) {
                 let user = TestRegister(positiveCaseConfig, tags)
                 users.push(user)
             }
@@ -88,106 +97,106 @@ export default function () {
                 TestProductManagementPost(getRandomUser(), positiveCaseConfig, tags)
                 TestProductManagementGet(getRandomUser(), positiveCaseConfig, tags)
             }
-            if (calculatePercentage(0.5, totalVUs)) {
+            if (calculatePercentage(0.5, __VU)) {
                 TestProductManagementPut(getRandomUser(), positiveCaseConfig, tags)
             }
-            if (calculatePercentage(0.1, totalVUs)) {
+            if (calculatePercentage(0.1, __VU)) {
                 TestProductManagementDelete(getRandomUser(), positiveCaseConfig, tags)
             }
             for (let i = 0; i < 20; i++) {
                 TestCustomerGetProduct(getRandomUser(), positiveCaseConfig, tags)
             }
 
-            if (calculatePercentage(0.5, totalVUs)) {
+            if (calculatePercentage(0.5, __VU)) {
                 TestCustomerRegister(getRandomUser(), positiveCaseConfig, tags)
                 TestCustomerCheckout(getRandomUser(), positiveCaseConfig, tags)
             }
-        } else if (currentTarget == 200) {
-            if (calculatePercentage(0.1, totalVUs)) {
+        } else if (determineStage() == 3) {
+            if (calculatePercentage(0.1, __VU)) {
                 let user = TestRegister(positiveCaseConfig, tags)
                 users.push(user)
             }
             TestLogin(getRandomUser(), tags)
             for (let i = 0; i < 10; i++) {
-                if (calculatePercentage(0.2, totalVUs)) {
+                if (calculatePercentage(0.2, __VU)) {
                     TestProductManagementPost(getRandomUser(), positiveCaseConfig, tags)
                 }
                 TestProductManagementGet(getRandomUser(), positiveCaseConfig, tags)
             }
-            if (calculatePercentage(0.8, totalVUs)) {
+            if (calculatePercentage(0.8, __VU)) {
                 TestProductManagementPut(getRandomUser(), positiveCaseConfig, tags)
             }
-            if (calculatePercentage(0.1, totalVUs)) {
+            if (calculatePercentage(0.1, __VU)) {
                 TestProductManagementDelete(getRandomUser(), positiveCaseConfig, tags)
             }
             for (let i = 0; i < 30; i++) {
-                if (calculatePercentage(0.5, totalVUs)) {
+                if (calculatePercentage(0.5, __VU)) {
                     TestCustomerGetProduct(getRandomUser(), positiveCaseConfig, tags)
                 } else {
                     TestCustomerGetProduct(getRandomUser(), config, tags)
                 }
             }
 
-            if (calculatePercentage(0.6, totalVUs)) {
+            if (calculatePercentage(0.6, __VU)) {
                 TestCustomerRegister(getRandomUser(), config, tags)
                 TestCustomerCheckout(getRandomUser(), config, tags)
             }
 
-            if (calculatePercentage(0.1, totalVUs)) {
+            if (calculatePercentage(0.1, __VU)) {
                 TestCustomerCheckoutHistory(user, productCheckout, positiveCaseConfig, tags)
             }
-        } else if (currentTarget == 300) {
+        } else if (determineStage() == 4) {
             TestLogin(getRandomUser(), tags)
             for (let i = 0; i < 5; i++) {
                 TestProductManagementGet(getRandomUser(), positiveCaseConfig, tags)
             }
-            if (calculatePercentage(0.8, totalVUs)) {
+            if (calculatePercentage(0.8, __VU)) {
                 TestProductManagementPut(getRandomUser(), positiveCaseConfig, tags)
             }
-            if (calculatePercentage(0.1, totalVUs)) {
+            if (calculatePercentage(0.1, __VU)) {
                 TestProductManagementDelete(getRandomUser(), positiveCaseConfig, tags)
             }
             for (let i = 0; i < 60; i++) {
-                if (calculatePercentage(0.5, totalVUs)) {
+                if (calculatePercentage(0.5, __VU)) {
                     TestCustomerGetProduct(getRandomUser(), positiveCaseConfig, tags)
                 } else {
                     TestCustomerGetProduct(getRandomUser(), config, tags)
                 }
             }
 
-            if (calculatePercentage(0.7, totalVUs)) {
+            if (calculatePercentage(0.7, __VU)) {
                 TestCustomerRegister(getRandomUser(), config, tags)
                 TestCustomerCheckout(getRandomUser(), config, tags)
             }
 
-            if (calculatePercentage(0.1, totalVUs)) {
+            if (calculatePercentage(0.1, __VU)) {
                 TestCustomerCheckoutHistory(user, productCheckout, positiveCaseConfig, tags)
             }
-        } else if (currentTarget == 600) {
+        } else if (determineStage() == 5) {
             TestLogin(getRandomUser(), tags)
             for (let i = 0; i < 5; i++) {
                 TestProductManagementGet(getRandomUser(), positiveCaseConfig, tags)
             }
-            if (calculatePercentage(0.8, totalVUs)) {
+            if (calculatePercentage(0.8, __VU)) {
                 TestProductManagementPut(getRandomUser(), positiveCaseConfig, tags)
             }
-            if (calculatePercentage(0.1, totalVUs)) {
+            if (calculatePercentage(0.1, __VU)) {
                 TestProductManagementDelete(getRandomUser(), positiveCaseConfig, tags)
             }
             for (let i = 0; i < 120; i++) {
-                if (calculatePercentage(0.5, totalVUs)) {
+                if (calculatePercentage(0.5, __VU)) {
                     TestCustomerGetProduct(getRandomUser(), positiveCaseConfig, tags)
                 } else {
                     TestCustomerGetProduct(getRandomUser(), config, tags)
                 }
             }
 
-            if (calculatePercentage(0.7, totalVUs)) {
+            if (calculatePercentage(0.7, __VU)) {
                 TestCustomerRegister(getRandomUser(), config, tags)
                 TestCustomerCheckout(getRandomUser(), config, tags)
             }
 
-            if (calculatePercentage(0.1, totalVUs)) {
+            if (calculatePercentage(0.1, __VU)) {
                 TestCustomerCheckoutHistory(user, productCheckout, positiveCaseConfig, tags)
             }
         }
