@@ -14,15 +14,19 @@ import { generateRandomNumber } from "../helpers/generator.js";
  * @returns {Boolean}
  */
 export function isUserValid(usr) {
-    if (
-        typeof usr === 'object' &&
-        typeof usr.phoneNumber === 'string' &&
-        typeof usr.password === 'string' &&
-        typeof usr.accessToken === 'string'
-    ) {
-        return true;
+    try {
+        if (
+            typeof usr === 'object' &&
+            typeof usr.phoneNumber === 'string' &&
+            typeof usr.password === 'string' &&
+            typeof usr.accessToken === 'string'
+        ) {
+            return true;
+        }
+        return false;
+    } catch (error) {
+        return false;
     }
-    return false;
 }
 
 
