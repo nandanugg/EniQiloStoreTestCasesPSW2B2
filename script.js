@@ -9,7 +9,7 @@ import { TestProductManagementDelete, TestProductManagementGet, TestProductManag
 const stages = []
 
 if (config.LOAD_TEST) {
-    options.stages.push(
+    stages.push(
         { target: 50, iterations: 1, duration: "15s" },
         { target: 100, iterations: 1, duration: "15s" },
         { target: 150, iterations: 1, duration: "30s" },
@@ -19,11 +19,12 @@ if (config.LOAD_TEST) {
         { target: 600, iterations: 1, duration: "1m" }
     );
 } else {
-    options.stages.push({
+    stages.push({
         target: 1,
         iterations: 1
     });
 }
+
 export const options = {
     stages,
     summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(95)', 'p(99)'],
