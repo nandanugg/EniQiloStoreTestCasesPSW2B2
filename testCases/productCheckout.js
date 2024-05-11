@@ -17,7 +17,7 @@ const registerCustomerNegativePayloads = (positivePayload) => generateTestObject
 function generateNewCustomer() {
     return {
         name: generateRandomName(),
-        phoneNumber: `+${generateInternationalCallingCode()}${generateRandomNumber(1000000, 999999999)}`,
+        phoneNumber: `+${generateInternationalCallingCode()}${generateRandomNumber(1000000, 99999999)}`,
     }
 }
 
@@ -111,7 +111,7 @@ export function TestCustomerGet(user, config, tags) {
     }
 
     if (!config.POSITIVE_CASE) {
-        const phoneNumberToAdd = `+${generateInternationalCallingCode()}${generateRandomNumber(1000000, 999999999)}`
+        const phoneNumberToAdd = `+${generateInternationalCallingCode()}${generateRandomNumber(1000000, 99999999)}`
         let phoneNumberToSearch = phoneNumberToAdd.substring(0, phoneNumberToAdd.length - 3)
         phoneNumberToSearch = phoneNumberToSearch.substring(1)
         let nameToSearch = generateRandomName()
@@ -132,7 +132,7 @@ export function TestCustomerGet(user, config, tags) {
         }, config, tags)
         testPostJsonAssert(currentFeature, 'add customer with searched name', postFeatureRoute, {
             name: nameToSearch,
-            phoneNumber: `+${generateInternationalCallingCode()}${generateRandomNumber(1000000, 999999999)}`,
+            phoneNumber: `+${generateInternationalCallingCode()}${generateRandomNumber(1000000, 99999999)}`,
         }, postFeatureHeaders, {
             ['should return 201']: (res) => res.status === 201,
         }, config, tags)
