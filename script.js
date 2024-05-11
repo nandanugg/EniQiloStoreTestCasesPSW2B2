@@ -48,21 +48,17 @@ const positiveCaseConfig = Object.assign(clone(config), {
     POSITIVE_CASE: true
 })
 
-
 function calculatePercentage(percentage, __VU) {
     return (__VU - 1) % Math.ceil(__VU / Math.round(__VU * percentage)) === 0;
 }
 
-
-const users = []
-function getRandomUser() {
-    const i = generateRandomNumber(0, users.length - 1)
-    return users[i]
-}
-
-
 export default function () {
-    // let currentUser;
+    const users = []
+    function getRandomUser() {
+        const i = generateRandomNumber(0, users.length - 1)
+        return users[i]
+    }
+
     let tags = {}
 
     if (config.LOAD_TEST) {
