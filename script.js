@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import { config } from './config.js';
-import { clone } from './helpers/generator.js';
+import { clone, generateRandomNumber } from './helpers/generator.js';
 import { TestLogin } from './testCases/authLogin.js';
 import { TestRegister } from './testCases/authRegister.js';
 import { TestCustomerCheckout, TestCustomerCheckoutHistory, TestCustomerGet, TestCustomerRegister } from './testCases/productCheckout.js';
