@@ -220,6 +220,7 @@ export function TestCustomerCheckout(user, config, tags) {
     function composeProductToBuy() {
         productsToBuy = []
         productsToBuyButQuantityIsNotEnough = []
+        totalPrice = 0
         /** @type {import("../helpers/request.js").RequestAssertResponse} */
         let res = testGetAssert(currentFeature, "get customer", `${config.BASE_URL}/v1/customer`, {}, headers, {
             ['should return 200']: (res) => res.status === 200,
