@@ -66,7 +66,7 @@ export default function () {
 
 
     let elapsedTime = (new Date().getTime() - __ENV.TEST_START_TIME) / 1000;
-    console.log("elapsedTime", elapsedTime)
+    console.log("elapsedTime", elapsedTime, __ENV.TEST_START_TIME)
 
     if (config.LOAD_TEST) {
         if (determineStage() == 1) {
