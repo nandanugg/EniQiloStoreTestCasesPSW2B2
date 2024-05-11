@@ -131,14 +131,17 @@ export default function () {
                 }
             }
 
+            let productCheckout;
             if (calculatePercentage(0.6, __VU)) {
                 TestCustomerRegister(getRandomUser(), config, tags)
-                TestCustomerCheckout(getRandomUser(), config, tags)
+                productCheckout = TestCustomerCheckout(getRandomUser(), config, tags)
+                if (calculatePercentage(0.1, __VU)) {
+                    TestCustomerCheckoutHistory(user, productCheckout[generateRandomNumber(0, productCheckout.length - 1)],
+                        positiveCaseConfig, tags)
+                }
             }
 
-            if (calculatePercentage(0.1, __VU)) {
-                TestCustomerCheckoutHistory(user, productCheckout, positiveCaseConfig, tags)
-            }
+
         } else if (determineStage() == 4) {
             let user = TestRegister(positiveCaseConfig, tags)
             users.push(user)
@@ -160,13 +163,14 @@ export default function () {
                 }
             }
 
-            if (calculatePercentage(0.7, __VU)) {
+            let productCheckout;
+            if (calculatePercentage(0.6, __VU)) {
                 TestCustomerRegister(getRandomUser(), config, tags)
-                TestCustomerCheckout(getRandomUser(), config, tags)
-            }
-
-            if (calculatePercentage(0.1, __VU)) {
-                TestCustomerCheckoutHistory(user, productCheckout, positiveCaseConfig, tags)
+                productCheckout = TestCustomerCheckout(getRandomUser(), config, tags)
+                if (calculatePercentage(0.1, __VU)) {
+                    TestCustomerCheckoutHistory(user, productCheckout[generateRandomNumber(0, productCheckout.length - 1)],
+                        positiveCaseConfig, tags)
+                }
             }
         } else if (determineStage() == 5) {
             let user = TestRegister(positiveCaseConfig, tags)
@@ -189,13 +193,14 @@ export default function () {
                 }
             }
 
-            if (calculatePercentage(0.7, __VU)) {
+            let productCheckout;
+            if (calculatePercentage(0.6, __VU)) {
                 TestCustomerRegister(getRandomUser(), config, tags)
-                TestCustomerCheckout(getRandomUser(), config, tags)
-            }
-
-            if (calculatePercentage(0.1, __VU)) {
-                TestCustomerCheckoutHistory(user, productCheckout, positiveCaseConfig, tags)
+                productCheckout = TestCustomerCheckout(getRandomUser(), config, tags)
+                if (calculatePercentage(0.1, __VU)) {
+                    TestCustomerCheckoutHistory(user, productCheckout[generateRandomNumber(0, productCheckout.length - 1)],
+                        positiveCaseConfig, tags)
+                }
             }
         }
 
