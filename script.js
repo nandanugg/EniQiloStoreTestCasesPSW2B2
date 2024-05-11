@@ -6,6 +6,7 @@ import { TestRegister } from './testCases/authRegister.js';
 import { TestCustomerCheckout, TestCustomerCheckoutHistory, TestCustomerGet, TestCustomerRegister } from './testCases/productCheckout.js';
 import { TestCustomerGetProduct } from './testCases/productCustomer.js';
 import { TestProductManagementDelete, TestProductManagementGet, TestProductManagementPost, TestProductManagementPut } from './testCases/productManagement.js';
+import exec from 'k6/execution';
 
 const stages = []
 
