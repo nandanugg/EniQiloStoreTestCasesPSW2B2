@@ -344,7 +344,7 @@ export function TestCustomerCheckout(user, config, tags) {
                 payload = composeProductToBuy()
             }
 
-            res = testPostJsonAssert(currentFeature, "checkout with correct payload", currentRoute, payload, headers, {
+            res = testPostJsonAssert(currentFeature, "checkout with correct payload loop " + i, currentRoute, payload, headers, {
                 ['should return 200']: (res) => res.status === 200,
             }, config, tags);
 
