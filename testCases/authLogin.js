@@ -20,7 +20,7 @@ export function TestLogin(user, config, tags) {
     const currentFeature = "login"
 
     if (!isUserValid(user)) {
-        fail("Invalid user object")
+        fail(`${currentFeature} Invalid user object`)
     }
 
     const headers = {}

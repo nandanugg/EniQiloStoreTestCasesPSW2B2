@@ -30,7 +30,7 @@ export function TestProductManagementPost(user, config, tags) {
     const currentFeature = "post product"
 
     if (!isUserValid(user)) {
-        fail("Invalid user object")
+        fail(`${currentFeature} Invalid user object`)
     }
 
     const headers = {
@@ -84,7 +84,7 @@ export function TestProductManagementGet(user, config, tags) {
     const currentFeature = "get product"
 
     if (!isUserValid(user)) {
-        fail("Invalid user object")
+        fail(`${currentFeature} Invalid user object`)
     }
 
     const headers = {
@@ -243,7 +243,7 @@ export function TestProductManagementPut(user, config, tags) {
     const currentFeature = "put product"
 
     if (!isUserValid(user)) {
-        fail("Invalid user object")
+        fail(`${currentFeature} Invalid user object`)
     }
 
     const headers = {
@@ -261,7 +261,7 @@ export function TestProductManagementPut(user, config, tags) {
     }, config, tags);
 
     if (!res.isSuccess) {
-        fail("get product to edit failed", res)
+        fail(`${currentFeature} get product to edit failed`, res)
     }
     /** @type {import("../types/product.js").Product[]} */
     const products = res.res.json().data
@@ -322,7 +322,7 @@ export function TestProductManagementDelete(user, config, tags) {
     const currentFeature = "delete product"
 
     if (!isUserValid(user)) {
-        fail("Invalid user object")
+        fail(`${currentFeature} Invalid user object`)
     }
 
     const headers = {
