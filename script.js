@@ -51,8 +51,8 @@ function getRandomUser() {
 export default function () {
     // let currentUser;
     let tags = {}
-    const currentTarget = options.stages[0].target;
-    const currentStage = options.stages[0]; // Get the current stage
+    const currentTarget = options.stages.find(stage => stage.target === __VU).target;
+    const currentStage = options.stages.find(stage => stage.target === __VU); // Get the current stage
     const totalVUs = currentStage.target; // Total VUs for the current stage
 
     if (config.LOAD_TEST) {
