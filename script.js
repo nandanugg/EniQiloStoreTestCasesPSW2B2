@@ -43,10 +43,6 @@ function calculatePercentage(percentage, totalVUs) {
 
 const users = []
 function getRandomUser() {
-    if (users.length === 0 || usedKeys.length === users.length) {
-        return null;
-    }
-
     const i = generateRandomNumber(0, users.length - 1)
     return users[i]
 }
