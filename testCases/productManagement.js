@@ -289,23 +289,25 @@ export function TestProductManagementPut(user, config, tags) {
         ['should return 200']: (res) => res.status === 200,
     }, config, tags);
 
-    res = testGetAssert(currentFeature, "get product after edit", currentRoute, {
-        id: productToEdit.id
-    }, headers, {
-        ['should return 200']: (res) => res.status === 200,
-        ['should have edited data']: (res) => isEqualWith(res, 'data[]', (v) => {
-            try {
-                Object.keys(productPositivePayload).forEach(key => {
-                    if (v[0][key] !== productPositivePayload[key]) {
-                        return false
-                    }
-                })
-                return true
-            } catch (error) {
-                return false
-            }
-        })
-    }, config, tags);
+    if (!config.LOAD_TEST) {
+        res = testGetAssert(currentFeature, "get product after edit", currentRoute, {
+            id: productToEdit.id
+        }, headers, {
+            ['should return 200']: (res) => res.status === 200,
+            ['should have edited data']: (res) => isEqualWith(res, 'data[]', (v) => {
+                try {
+                    Object.keys(productPositivePayload).forEach(key => {
+                        if (v[0][key] !== productPositivePayload[key]) {
+                            return false
+                        }
+                    })
+                    return true
+                } catch (error) {
+                    return false
+                }
+            })
+        }, config, tags);
+    }
 
     return null
 }
