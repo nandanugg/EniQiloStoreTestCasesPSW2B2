@@ -19,7 +19,8 @@ if (config.LOAD_TEST) {
         { target: 200, iterations: 1, duration: "20s" },
         { target: 250, iterations: 1, duration: "20s" },
         { target: 300, iterations: 1, duration: "20s" },
-        { target: 600, iterations: 1, duration: "20s" }
+        { target: 600, iterations: 1, duration: "20s" },
+        { target: 1200, iterations: 1, duration: "20s" },
     );
 } else {
     stages.push({
