@@ -32,13 +32,13 @@ if (config.LOAD_TEST) {
 function determineStage() {
     let elapsedTime = (exec.instance.currentTestRunDuration / 1000).toFixed(0);
     if (elapsedTime < 5) return 1; // First 5 seconds
-    if (elapsedTime < 10) return 2; // Next 10 seconds
+    if (elapsedTime < 15) return 2; // Next 10 seconds
     if (elapsedTime < 35) return 3; // Next 20 seconds
     if (elapsedTime < 55) return 4; // Next 20 seconds
     if (elapsedTime < 75) return 5; // Next 20 seconds
-    if (elapsedTime < 95) return 6; // Next 20 seconds
-    if (elapsedTime < 115) return 7; // Next 20 seconds
-    return 8; // Remaining time
+    if (elapsedTime < 95) return 5; // Next 20 seconds
+    if (elapsedTime < 115) return 5; // Next 20 seconds
+    return 5; // Remaining time
 }
 
 export const options = {
